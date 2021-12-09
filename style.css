@@ -1,0 +1,536 @@
+/*
+font-family: 'Bangers', cursive;
+font-family: 'Black Ops One', cursive;
+font-family: 'Molle', cursive;
+font-family: 'Poller One', cursive;
+font-family: 'Press Start 2P', cursive;
+font-family: 'Ultra', serif; */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    user-select: none;
+    font-family: "Darker Grotesque", sans-serif;
+}
+
+.container {
+    display: flex;
+    background-color: black;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.headline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    width: 10vw;
+    font-size: 6vh;
+    height: 90vh;
+    margin-right: 2vmax;
+    border: 1px solid white;
+    border-radius: 1vh;
+    animation: fadeIn 2s;
+    background-color: rgba(255, 255, 255, 0.11);
+    font-family: "Poller One", cursive;
+}
+
+.headline div {
+    visibility: hidden;
+    border: 1px solid cyan;
+    padding: 0 1vmax;
+    border-radius: 50%;
+    margin-bottom: 2vh;
+    color: yellow;
+}
+
+main {
+    background-color: rgba(255, 255, 255, 0.158);
+    padding: 1vmax;
+    border-radius: 1vh;
+}
+
+.gameBoard {
+    background-color: rgba(0, 0, 0, 0.678);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-row-gap: 1vmax;
+    grid-column-gap: 1vmax;
+    justify-items: center;
+    height: 90vh;
+    min-width: 60vw;
+    border-radius: 1vh;
+    border: 1px solid white;
+    animation: fadeIn 1s;
+}
+
+.dot,
+.player1,
+.player2,
+.winner {
+    width: 8vh;
+    height: 8vh;
+    background-color: orange;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    cursor: pointer;
+    border: 1px solid white;
+}
+
+.player {
+    z-index: 2;
+}
+
+.player1 {
+    background-color: cyan !important;
+    z-index: 2;
+    animation: backlight 0.5s 2;
+}
+
+.player2 {
+    background-color: rgb(204, 0, 255) !important;
+    z-index: 2;
+    animation: backlight 0.5s 2;
+}
+
+.winner {
+    background-color: red !important;
+
+    animation: updownWin 1s infinite ease-in-out;
+}
+
+#p1:hover,
+#p2:hover {
+    animation: shakeHover 4s infinite ease-in-out !important;
+    cursor: grab;
+}
+
+#p1 {
+    background-color: cyan;
+    animation: backlight 3s infinite ease-in-out,
+        updownWin2 3s infinite ease-in-out;
+    margin-top: 0;
+}
+
+#p2 {
+    background-color: rgb(204, 0, 255);
+    animation: backlight 3s infinite ease-in-out,
+        updownWin2 3s infinite ease-in-out;
+    margin-top: 0;
+}
+
+#p0 {
+    animation: backlight 3s infinite ease-in-out, drawFX 6s infinite ease-in-out;
+    margin: 2vmax;
+    background: linear-gradient(
+        90deg,
+        cyan 50.927083333333334%,
+        rgb(204, 0, 255) 50.84374999999999%
+    );
+}
+
+.draw {
+    font-size: 3vmax;
+    color: white;
+}
+
+#draw {
+    background: linear-gradient(
+        90deg,
+        cyan 50.927083333333334%,
+        rgb(204, 0, 255) 50.84374999999999%
+    );
+    animation: drawFX 6s infinite ease-in-out;
+    margin: 2vmax;
+}
+
+.controls {
+    width: 20vw;
+    height: 90vh;
+    border: 1px solid white;
+    background-color: rgba(255, 255, 255, 0.11);
+    border-radius: 1vh;
+    margin-left: 2vmax;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    align-self: center;
+    animation: fadeInControls 1.5s;
+    visibility: hidden;
+}
+
+.controlsTop {
+    min-height: 38vh;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.token {
+    width: 8vh;
+    height: 8vh;
+    border-radius: 50%;
+    margin-top: -2vmax;
+    z-index: 3;
+    animation: backlight 3s infinite ease-in-out;
+}
+
+.token:hover {
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 166, 0, 0.885);
+    animation: none;
+}
+
+.user {
+    text-align: left;
+    margin-top: 1vmax;
+    font-size: 3vmax;
+    color: white;
+    letter-spacing: 3px;
+    width: 16vw;
+    margin-left: 2vw;
+}
+
+.user span {
+    letter-spacing: 0;
+}
+
+.description span:nth-child(3){
+
+        margin-top:0.5vmax !important;
+}
+
+.description span {
+    margin-top:1vmax;
+}
+
+.description {
+    height: 42vh;
+   text-indent: 1vmax;
+    color: white;
+    width: 16vw;
+    text-align:justify;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    animation: textDot 3s infinite;
+letter-spacing: 1px;
+    font-size: 1.1vmax;
+}
+
+.arrow {
+    animation: bounceDesc 3s infinite ease-in-out;
+    font-size: 3vmax;
+    color: white;
+    background-image: url("./assets/arrowUp.png");
+    background-size: cover;
+    width: 3vmax;
+    height: 3vmax;
+    filter: invert(100%);
+    margin-bottom: 1.5vmax;
+    margin-top:-3vmax !important;
+}
+
+.clear {
+    color: white;
+    cursor: pointer;
+    letter-spacing: 2px;
+    font-family: "Poller One", cursive;
+    font-size: 1.3vmax;
+    margin:3vmax 0 2vmax 0;
+        color: yellowgreen;
+}
+
+.clear:hover {
+  animation: textDot 0.5s infinite;
+}
+
+.mute,
+.play {
+    background-image: url("./assets/mute.png");
+    background-size: cover;
+    width: 1vmax;
+    height: 1vmax;
+    position: fixed;
+    bottom: 1vmax;
+    right: 1vmax;
+    cursor: pointer;
+}
+
+.play {
+    background-image: url("./assets/play.png");
+}
+
+.audio {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+.hand {
+    background-image: url("./assets/hand.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 12vw;
+    height: 11vh;
+    filter: invert(100%);
+    transform: scaleX(-1);
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
+
+@keyframes fadeInControls {
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
+
+@keyframes bounceDesc {
+    0% {
+        transform: scaleX(1);
+    }
+
+    15% {
+        margin-left: -5vmax;
+        transform: scaleX(1) rotate(-90deg);
+    }
+
+    50% {
+        opacity: 0%;
+    }
+
+    80% {
+        transform: scaleX(1);
+        transition: 1s;
+    }
+
+    70% {
+        opacity: 0%;
+        transform: scaleX(1);
+        transition: 1s;
+    }
+    75% {
+        opacity: 100%;
+        transform: scaleX(-1);
+        transition: 1s;
+    }
+
+    100% {
+        transform: scaleX(1);
+        transition: 0.1s;
+    }
+}
+
+@keyframes backLight {
+    0% {
+        background-color: cyan;
+        box-shadow: 0 0 7px cyan;
+    }
+
+    50% {
+        background-color: rgb(204, 0, 255);
+        box-shadow: 0 0 7px rgb(204, 0, 255);
+    }
+
+    100% {
+        background-color: cyan;
+        box-shadow: 0 0 7px cyan;
+    }
+}
+
+@keyframes backlight {
+    50% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.685);
+    }
+}
+
+@keyframes backlight2 {
+    0% {
+        box-shadow: none;
+    }
+
+    50% {
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.685);
+    }
+
+    100% {
+        box-shadow: none;
+    }
+}
+
+@keyframes backlight3 {
+    0% {
+        box-shadow: none;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.685);
+    }
+
+    100% {
+        box-shadow: none;
+    }
+}
+
+@keyframes updownWin {
+    0% {
+        width: 6vh;
+        height: 6vh;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.685);
+    }
+    50% {
+        width: 9vh;
+        height: 9vh;
+    }
+    100% {
+        width: 6vh;
+        height: 6vh;
+    }
+}
+
+@keyframes textDot {
+    0% {
+        color: cyan;
+    }
+
+    50% {
+        color: rgb(204, 0, 255);
+    }
+
+    100% {
+        color: cyan;
+    }
+}
+
+@keyframes drawFX {
+    0% {
+        transform: rotate(-2turn);
+        transition: 2s;
+    }
+}
+
+@keyframes shake {
+    0% {
+        transform: translate(1px, 1px) rotate(0.5deg);
+    }
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+    }
+    20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+    }
+    30% {
+        transform: translate(3px, 2px) rotate(0deg);
+    }
+    40% {
+        transform: translate(1px, -1px) rotate(1deg);
+    }
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+    }
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+    }
+    70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+    }
+    80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+    }
+    95% {
+        transform: translate(1px, -1px) rotate(0.5deg);
+    }
+    100% {
+        transform: translate(1px, 1px) rotate(0.5deg);
+    }
+}
+
+@keyframes shakeHover {
+    0% {
+        transform: translate(1px, -5px) rotate(0.5deg);
+    }
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+    }
+    20% {
+        transform: translate(5px, 0px) rotate(1deg);
+    }
+    30% {
+        transform: translate(3px, 2px) rotate(0deg);
+    }
+    40% {
+        transform: translate(-5px, -1px) rotate(1deg);
+    }
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+    }
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+
+    }
+    70% {
+        transform: translate(3px, -5px) rotate(-1deg);
+    }
+    80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+    }
+    95% {
+        transform: translate(1px, 5px) rotate(0.5deg);
+    }
+    100% {
+        transform: translate(1px, -5px) rotate(0.5deg);
+    }
+}
+
+@media only screen and (min-device-width: 100px) and (max-device-width: 480px) and (orientation: portrait) {
+    .container {
+        visibility: hidden;
+    }
+
+    body {
+        background-color: black !important;
+    }
+    .controls {
+        visibility: hidden !important;
+    }
+
+    .turnScreen {
+        visibility: visible !important;
+    }
+}
+
+@media only screen and (min-device-width: 273px) and (max-device-width: 1024px) and (orientation: landscape) {
+}
+
+.turnScreen {
+    color: white;
+    position: fixed;
+    bottom: 50%;
+    left: 30vw;
+    width: 60vw;
+    text-align: center;
+    animation: fadeIn 2s infinite;
+    visibility: hidden;
+}

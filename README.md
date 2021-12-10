@@ -6,7 +6,7 @@
  
   <div align=center>
 
-<h1><br>💠</br> Description</h1>
+<h1><br>🔸🔷🔸</br> Description</h1>
  <div align=center>
 <br>The story goes like this : I was creating DOM elements with Javascript and started building shapes, styling with CSS Grid. At some point, my screen
         started looking similar to the Board of Connect 4, the old Game for kids I've made with jQuery about a year ago. I decided to move on
@@ -18,7 +18,7 @@
  <div align=center>
 
 
-<h1><br>💠</br> Tech</h1>
+<h1><br>🔹🔶🔹</br> Tech</h1>
  <div align=center>
 <br>Vanilla JS</br>
  </div>
@@ -26,7 +26,7 @@
  
   <div align=center>
 
-   <h1><br>💠</br> Features</h1>
+   <h1><br>🔹🔶🔹</br> Features</h1>
  <div align=center>
   <br>2-Player Game Mode</br>
 <brDraggable Playing Dot</br>

@@ -1,7 +1,7 @@
 <div align=center>
  <h1>Connect 4 - Remastered</h1>
  <div>https://zero-psy.com/c4/</div>
-
+<img src="http://zero-psy.herokuapp.com/projectPics/c4RE4.gif"/>
  </div>
  
   <div align=center>

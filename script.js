@@ -34,17 +34,14 @@ var myAudioDraw = new Audio("./assets/draw.mp3");
 var letMusicPlay = true;
 var firstClick = 0;
 
-////////////////////////////////////Start CREATE BOARD //////////////////////////////
+//////////////////////////////////// Start CREATE BOARD //////////////////////////////
 
 const createDots = () => {
     if (createDotsCounter < 43) {
         dot.className = "dot";
         dot.id = createDotsCounter;
-
         gameBoard[0].appendChild(dot.cloneNode(true));
-
         createDotsCounter++;
-
         setTimeout(() => {
             createDots();
         }, 15);
@@ -59,7 +56,6 @@ const generateColumns = () => {
         columns[col] = [];
     }
 };
-
 generateColumns();
 
 const fillColumns = (e) => {
@@ -82,7 +78,7 @@ setTimeout(() => {
     buildColumns();
     allDots = document.querySelectorAll(".dot");
     controls[0].style = `visibility:visible;animation:fadeInControls 1.8s;`;
-}, 1000);
+}, 1500);
 
 ///////////////////////////////////////// End CREATE BOARD /////////////////////////////////
 
@@ -306,14 +302,14 @@ const victoryCheck = () => {
                     allDots[ii - 3].className == `player${player}`
                 ) {
                     if (
-                        ///////////////////// START BLOCK SIDE COUNT /////////////////////
+                        ///////////////////// BLOCK SIDE COUNT /////////////////////
                         (ii >= 3 && ii <= 6) ||
                         (ii >= 10 && ii <= 13) ||
                         (ii >= 17 && ii <= 20) ||
                         (ii >= 24 && ii <= 27) ||
                         (ii >= 31 && ii <= 34) ||
                         (ii >= 38 && ii <= 41)
-                        ///////////////////// END BLOCK SIDE COUNT /////////////////////
+                        ///////////////////// BLOCK SIDE COUNT /////////////////////
                     ) {
                         allDots[ii].className = `winner`;
                         allDots[ii - 1].className = `winner`;
@@ -335,11 +331,11 @@ const victoryCheck = () => {
                     allDots[x - 24].className == `player${player}`
                 ) {
                     if (
-                        ///////////////////// START BLOCK SIDE COUNT /////////////////////
+                        ///////////////////// BLOCK SIDE COUNT /////////////////////
                         (x >= 38 && x <= 41) ||
                         (x >= 31 && x <= 34) ||
                         (x >= 24 && x <= 27)
-                        ///////////////////// END BLOCK SIDE COUNT /////////////////////
+                        ///////////////////// BLOCK SIDE COUNT /////////////////////
                     ) {
                         allDots[x].className = `winner`;
                         allDots[x - 8].className = `winner`;
@@ -375,19 +371,6 @@ const victoryCheck = () => {
         }
     }
 };
-
-document.addEventListener("mouseover", function (e) {
-    // console.log(e.clientX, e.clientY);
-    // console.log(e)
-    // if(endGame){
-    //     document.addEventListener("mousemove", function (e) {
-    //     if (e.target.id === "p1" || e.target.id === "p2") {
-    //       e.target.style = `margin-top:0; position:fixed; top:${
-    //           e.clientY - (e.clientY + e.screenY)
-    //       }px; left:${e.clientX + 5}px`;
-    //     }
-    // })}
-});
 
 document.addEventListener("click", function (e) {
     if (e.target.className === "mute") {
@@ -543,14 +526,12 @@ const gameTimeCount = () => {
     if (seconds >= 60) {
         seconds = 0;
     }
-    if (minutes >= 0) {
-        desc[0].innerHTML = `TIME ELAPSED <div>${minutes} MIN  ${seconds} SEC</div>`;
-          desc[0].style = `height:unset; animation:none !important;`;
-    } else {
-        desc[0].innerHTML = `TIME ELAPSED <div> SEC ${seconds}</div>`;
-      
-    }
     if (minutes >= 1) {
-           desc[0].style = `height:unset; animation: textDot 1s infinite ease-in-out`;
+        desc[0].innerHTML = `TIME ELAPSED <div>${minutes} MIN  ${seconds} SEC</div>`;
+       desc[0].style = `height:unset; animation: textDot 1s infinite ease-in-out`;
+    } else {
+        desc[0].innerHTML = `TIME ELAPSED <div>${seconds} SEC</div>`;
+          desc[0].style = `height:unset; animation:none !important;`;
     }
+
 };

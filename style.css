@@ -209,27 +209,26 @@ main {
     letter-spacing: 0;
 }
 
-.description span:nth-child(3){
-
-        margin-top:0.5vmax !important;
+.description span:nth-child(3) {
+    margin-top: 0.5vmax !important;
 }
 
 .description span {
-    margin-top:1vmax;
+    margin-top: 1vmax;
 }
 
 .description {
     height: 42vh;
-   text-indent: 1vmax;
+    text-indent: 1vmax;
     color: white;
     width: 16vw;
-    text-align:justify;
+    text-align: justify;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     animation: textDot 3s infinite;
-letter-spacing: 1px;
+    letter-spacing: 1px;
     font-size: 1.1vmax;
 }
 
@@ -243,7 +242,7 @@ letter-spacing: 1px;
     height: 3vmax;
     filter: invert(100%);
     margin-bottom: 1.5vmax;
-    margin-top:-3vmax !important;
+    margin-top: -3vmax !important;
 }
 
 .clear {
@@ -252,12 +251,12 @@ letter-spacing: 1px;
     letter-spacing: 2px;
     font-family: "Poller One", cursive;
     font-size: 1.3vmax;
-    margin:3vmax 0 2vmax 0;
-        color: yellowgreen;
+    margin: 3vmax 0 2vmax 0;
+    color: yellowgreen;
 }
 
 .clear:hover {
-  animation: textDot 0.5s infinite;
+    animation: textDot 0.5s infinite;
 }
 
 .mute,
@@ -488,7 +487,6 @@ letter-spacing: 1px;
     }
     60% {
         transform: translate(-3px, 1px) rotate(0deg);
-
     }
     70% {
         transform: translate(3px, -5px) rotate(-1deg);
@@ -522,13 +520,17 @@ letter-spacing: 1px;
 }
 
 @media only screen and (min-device-width: 273px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .description {
+        font-size: 1.2vmax !important;
+        width: 14vw;
+    }
 }
 
 .turnScreen {
     color: white;
     position: fixed;
     bottom: 50%;
-    left: 30vw;
+    left: 20vw;
     width: 60vw;
     text-align: center;
     animation: fadeIn 2s infinite;

@@ -3,46 +3,55 @@
     <head>
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no"
+        />
         <link rel="stylesheet" href="style.css" />
         <title>Connect 4 Remastered</title>
-        <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
-        <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Black+Ops+One&family=Molle:ital@1&family=Poller+One&family=Press+Start+2P&family=Ultra&family=Darker+Grotesque&display=swap"" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+        <link
+        href="https://fonts.googleapis.com/css2?family=Bangers&family=Black+Ops+One&family=Molle:ital@1&family=Poller+One&family=Press+Start+2P&family=Ultra&family=Darker+Grotesque&display=swap""
+        rel="stylesheet">
     </head>
 
     <body>
         <div class="container">
-        <div class="headline">
-            <div>C</div>
-            <div>O</div>
-            <div>N</div>
-            <div>N</div>
-            <div>E</div>
-            <div>C</div>
-            <div>T</div>
-            <div>4</div>
-        </div>
-        <main><div class="gameBoard"></div></main>
-        <div class="controls">
-            <div class="controlsTop">
-                <div class="user"></div>
-                <div class="token"></div>
-                <div class="hand"></div>
+            <div class="headline">
+                <div>C</div>
+                <div>O</div>
+                <div>N</div>
+                <div>N</div>
+                <div>E</div>
+                <div>C</div>
+                <div>T</div>
+                <div>4</div>
             </div>
-    <div class="clear"></div>
-            <div class="description">
-                <div class="arrow"></div>
-               TO START CLICK ON THE SLOTS OF THE BOARD, OR  USE THE THE DOT ABOVE AND DRAG IT OVER<span>TO WIN THE GAME, CONNECT 4 SAME DOTS VERTICALLY, HORIZONTALLY OR DIAGONALLY</span> <span>ENJOY PLAYING</span> 
+            <main><div class="gameBoard"></div></main>
+            <div class="controls">
+                <div class="controlsTop">
+                    <div class="user"></div>
+                    <div class="token"></div>
+                    <div class="hand"></div>
+                </div>
+                <div class="clear"></div>
+                <div class="description">
+                    <div class="arrow"></div>
+                    TO START CLICK ON THE SLOTS OF THE BOARD, OR USE THE THE DOT
+                    ABOVE AND DRAG IT OVER<span
+                        >TO WIN THE GAME, CONNECT 4 SAME DOTS VERTICALLY,
+                        HORIZONTALLY OR DIAGONALLY</span
+                    >
+                    <span>ENJOY PLAYING</span>
+                </div>
 
+                <audio class="audio" controls>
+                    <source src="./assets/music.mp3" type="audio/mpeg" />
+                </audio>
             </div>
-        
-            <audio class="audio" controls>
-                <source src="./assets/music.mp3" type="audio/mpeg" />
-            </audio>
+            <div class="play"></div>
         </div>
-        <div class="play"></div>
-        </div>
-        <div class="turnScreen">Please Turn Your Device On The Side View</div>
+        <div class="turnScreen">Please Turn Your Device</div>
         <script src="script.js"></script>
     </body>
 </html>

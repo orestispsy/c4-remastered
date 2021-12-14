@@ -6,18 +6,21 @@ var token = document.querySelectorAll(".token");
 var user = document.querySelectorAll(".user");
 var desc = document.querySelectorAll(".description");
 var clear = document.querySelectorAll(".clear");
-var mute = document.querySelectorAll(".mute");
+var play = document.querySelectorAll(".play");
 var controls = document.querySelectorAll(".controls");
 var controlsTop = document.querySelectorAll(".controlsTop");
 var headline = document.querySelectorAll(".headline");
 var audio = document.querySelectorAll(".audio");
-audio[0].volume = 0.6;
 var hand = document.querySelectorAll(".hand");
-
+var block = document.querySelectorAll(".blockScreen");
+var arrow = document.querySelectorAll(".arrow");
+var gameMode = document.querySelectorAll(".gameMode");
+var gameVersusCPU = false;
 var endGame = false;
 var goButton = false;
 var player = 0;
 var createDotsCounter = 1;
+var updateDotsCounter = 0;
 var headlineIntroFXCounter = 0;
 var headlineStartGameFXCounter = 0;
 var headlineVictoryFXCounter = 0;
@@ -28,11 +31,17 @@ var start = false;
 var allDots;
 var myAudio = new Audio("./assets/throw.mp3");
 var myAudioVictory = new Audio("./assets/victory.mp3");
-myAudioVictory.volume = 0.4;
 var myAudioDraw = new Audio("./assets/draw.mp3");
-
 var letMusicPlay = true;
 var firstClick = 0;
+var warning4Victory = false;
+var lastMove;
+var lastMoveHelper;
+let seconds = 1;
+let minutes = 0;
+
+audio[0].volume = 0.6;
+myAudioVictory.volume = 0.4;
 
 //////////////////////////////////// Start CREATE BOARD //////////////////////////////
 
@@ -44,6 +53,18 @@ const createDots = () => {
         createDotsCounter++;
         setTimeout(() => {
             createDots();
+        }, 15);
+    }
+    box = document.querySelectorAll(".dot");
+};
+
+const updateDots = () => {
+    if (updateDotsCounter < 42) {
+        allDots[updateDotsCounter].className = "dot";
+
+        updateDotsCounter++;
+        setTimeout(() => {
+            updateDots();
         }, 15);
     }
     box = document.querySelectorAll(".dot");
@@ -75,12 +96,87 @@ const buildColumns = (e) => {
 };
 
 setTimeout(() => {
+    controls[0].style = `visibility:visible;animation:fadeInControls 1.8s;`;
+}, 800);
+
+setTimeout(() => {
     buildColumns();
     allDots = document.querySelectorAll(".dot");
-    controls[0].style = `visibility:visible;animation:fadeInControls 1.8s;`;
 }, 1500);
 
 ///////////////////////////////////////// End CREATE BOARD /////////////////////////////////
+
+const setPlayerMove = (e) => {
+            if (letMusicPlay) {
+                audio[0].play();
+                play[0].style = `visibility:visible`;
+                startGameHeadlineEffect();
+            }
+
+            clear[0].innerHTML = "Clear Board";
+    for (let j = 1; j <= 7; j++) {
+        for (let jj = 5; jj >= 0; jj--) {
+            if (columns[j][jj].id && columns[j][jj].id == e) {
+                let index = columns[j].findIndex((x) => {
+                    return x.id == e;
+                });
+
+                let filteredSlots = columns[j].filter((obj) => {
+                    return obj.className === "dot";
+                });
+
+                if (
+                    columns[j][index].className == "player1" ||
+                    columns[j][index].className == "player2"
+                ) {
+                    return;
+                } else {
+                    if (letMusicPlay) {
+                        myAudio.play();
+                    }
+                    setTimeout(() => {
+                        for (let i = 0; i < filteredSlots.length; i++) {
+                            if (player == 2) {
+                                filteredSlots[
+                                    i
+                                ].style = `background-color:cyan !important; box-shadow: 0 0 15px rgba(255, 255, 255, 0.685);`;
+                            } else if (player == 1) {
+                                filteredSlots[
+                                    i
+                                ].style = `background-color:rgb(204, 0, 255) !important; box-shadow: 0 0 15px rgba(255, 255, 255, 0.685);`;
+                            }
+                        }
+                    }, 150);
+                    setTimeout(() => {
+                        for (let i = 0; i < filteredSlots.length; i++) {
+                            filteredSlots[i].style = `background-color:orange`;
+                        }
+                    }, 300);
+
+                    if (player == 1) {
+                        filteredSlots.reverse()[0].className = "player1";
+                        lastMove = Number(filteredSlots[0].id);
+                        victoryCheck();
+                        if (gameVersusCPU) {
+                            runCPU();
+                        }
+
+                        console.log(lastMove);
+                        player = 2;
+                    } else {
+                        filteredSlots.reverse()[0].className = "player2";
+
+                        victoryCheck();
+
+                        player = 1;
+                    }
+                }
+            }
+        }
+    }
+};
+
+///////////////////////////////////////// Start THROW / DRAG TOKEN EFFECTS /////////////////////////////////
 
 document.addEventListener("mousedown", function (e) {
     if (
@@ -92,12 +188,14 @@ document.addEventListener("mousedown", function (e) {
             player = 1;
             changeTokenColor();
             firstClick++;
+            arrow[0].style = "height:0; width:0;";
         }
         goButton = true;
 
         body[0].style = `cursor:none !important;`;
         document.addEventListener("mousemove" || "mouseup", function (ev) {
             if (goButton) {
+                ///////////////////// COLUMN HOVER LIGHT FX/////////////////////
                 for (let j = 1; j <= 7; j++) {
                     for (let jj = 5; jj >= 0; jj--) {
                         if (
@@ -123,15 +221,80 @@ document.addEventListener("mousedown", function (e) {
                         }
                     }
                 }
+                ///////////////////// COLUMN HOVER LIGHT FX/////////////////////
+
+                ///////////////////// TOKEN DRAG FX/////////////////////
                 if (e.target.className === "token") {
                     e.target.style = `margin-top:0; position:fixed; top:${
                         ev.pageY + e.screenY * 0.01
                     }px; left:${ev.clientX - e.clientX * 0.02}px`;
                 }
+
+                ///////////////////// TOKEN DRAG FX/////////////////////
             }
         });
     }
 });
+
+document.addEventListener("touchmove", function (e) {
+    if (e.target.className === "token") {
+        e.target.style = `margin-top:0; position:fixed; top:${
+            e.touches[0].clientY - 25
+        }px; left:${e.touches[0].clientX - 25}px`;
+    }
+});
+
+document.addEventListener("touchend", function (e) {
+    
+    if (firstClick) {
+        console.log("e", e);
+        console.log(allDots[6].offsetTop, allDots[6].offsetLeft);
+        for (let ii = 0; ii < allDots.length; ii++) {
+            console.log(ii)
+
+            if (
+                allDots[ii].offsetLeft + 30 >
+                    e.target.offsetLeft + e.target.clientWidth + 30 &&
+                e.target.offsetLeft + e.target.clientWidth + 30 >
+                    allDots[ii].offsetLeft - 30 &&
+                allDots[ii].offsetTop + 35 > e.target.offsetTop &&
+                e.target.offsetTop > allDots[ii].offsetTop - 35
+            ) {
+
+                console.log(
+                    "dot",
+                    allDots[ii].offsetLeft,
+                    allDots[ii].offsetTop,
+                    "e",
+                    e.target.offsetLeft,
+                    e.target.offsetTop,
+                    "sums",
+                    e.target.clientWidth ,
+                                        e.target.offsetLeft + e.target.clientWidth + 30,
+                    allDots[ii].offsetLeft + 30,
+                    e.target.offsetLeft + e.target.clientWidth - 30
+                );
+                console.log(
+                    "YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+                    ii,
+                    allDots[ii].id
+                );
+                setPlayerMove(ii);
+            }
+
+            setTimeout(() => {
+                changeTokenColor();
+                goButton = false;
+                body[0].style = `cursor:unset !important;`;
+                token[0].style = `position:unset; `;
+            }, 100);
+        }
+        if (e.target.className === "token") {
+        }
+    }
+});
+
+///////////////////////////////////////// End THROW / DRAG TOKEN EFFECTS ////////////////////////////////
 
 document.addEventListener("mouseup", function (e) {
     if (goButton && !endGame) {
@@ -140,80 +303,18 @@ document.addEventListener("mouseup", function (e) {
             e.target.className == "player1" ||
             e.target.className == "player2"
         ) {
-            if (letMusicPlay) {
-                audio[0].play();
-                startGameHeadlineEffect();
-            }
+            ///////////////////////////////////////// Start CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
+    
 
-            clear[0].innerHTML = "Clear Board";
-
-            for (let j = 1; j <= 7; j++) {
-                for (let jj = 5; jj >= 0; jj--) {
-                    if (columns[j][jj].id && columns[j][jj].id == e.target.id) {
-                        let index = columns[j].findIndex(
-                            (x) => x.id === e.target.id
-                        );
-
-                        let filteredSlots = columns[j].filter((obj) => {
-                            return obj.className === "dot";
-                        });
-
-                        if (
-                            columns[j][index].className == "player1" ||
-                            columns[j][index].className == "player2"
-                        ) {
-                            return;
-                        } else {
-                            if (letMusicPlay) {
-                                myAudio.play();
-                            }
-
-                            setTimeout(() => {
-                                for (let i = 0; i < filteredSlots.length; i++) {
-                                    if (player == 2) {
-                                        filteredSlots[
-                                            i
-                                        ].style = `background-color:cyan !important; box-shadow: 0 0 15px rgba(255, 255, 255, 0.685);`;
-                                    } else if (player == 1) {
-                                        filteredSlots[
-                                            i
-                                        ].style = `background-color:rgb(204, 0, 255) !important; box-shadow: 0 0 15px rgba(255, 255, 255, 0.685);`;
-                                    }
-                                }
-                            }, 150);
-                            setTimeout(() => {
-                                for (let i = 0; i < filteredSlots.length; i++) {
-                                    filteredSlots[
-                                        i
-                                    ].style = `background-color:orange`;
-                                }
-                            }, 300);
-
-                            if (player == 1) {
-                                filteredSlots.reverse()[0].className =
-                                    "player1";
-
-                                victoryCheck();
-
-                                player = 2;
-                            } else {
-                                filteredSlots.reverse()[0].className =
-                                    "player2";
-
-                                victoryCheck();
-
-                                player = 1;
-                            }
-                        }
-                    }
-                }
-            }
+            setPlayerMove(e.target.id);
         }
     }
     token[0].style = `position:unset; `;
     changeTokenColor();
     goButton = false;
     body[0].style = `cursor:unset !important;`;
+
+    ///////////////////////////////////////// End CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
 });
 
 const changeTokenColor = (e) => {
@@ -257,7 +358,6 @@ const drawCheck = () => {
             emptySlots++;
         }
     });
-
     if (emptySlots === 0) {
         noWinner();
     }
@@ -326,6 +426,15 @@ const victoryCheck = () => {
             for (let x = allDots.length - 1; x >= 24; x--) {
                 if (
                     allDots[x].className == `player${player}` &&
+                    allDots[x - 7].className == `player${player}` &&
+                    allDots[x - 14].className == `player${player}`
+                ) {
+                    console.log("WARNING", x - 14);
+                    warning4Victory = Number(allDots[x - 14].id);
+                    lastMoveHelper = Number(allDots[x - 21].id);
+                }
+                if (
+                    allDots[x].className == `player${player}` &&
                     allDots[x - 8].className == `player${player}` &&
                     allDots[x - 16].className == `player${player}` &&
                     allDots[x - 24].className == `player${player}`
@@ -346,6 +455,15 @@ const victoryCheck = () => {
                 }
             }
             for (let x = allDots.length - 1; x >= 21; x--) {
+                if (
+                    allDots[x].className == `player${player}` &&
+                    allDots[x - 1].className == `player${player}` &&
+                    allDots[x - 2].className == `player${player}`
+                ) {
+                    console.log("WARNING", x - 2);
+                    warning4Victory = Number(allDots[x - 2].id);
+                    lastMoveHelper = Number(allDots[x - 3].id);
+                }
                 if (
                     allDots[x].className == `player${player}` &&
                     allDots[x - 6].className == `player${player}` &&
@@ -372,6 +490,47 @@ const victoryCheck = () => {
     }
 };
 
+const setGameMode = () => {
+    gameMode[0].innerHTML = "";
+    gameMode[0].style = "width:0; height:0; margin:0";
+    arrow[0].style = `    width: 3vmax;
+    height: 3vmax;`;
+    desc[0].innerHTML = `
+         TO START CLICK ON THE SLOTS OF THE BOARD, OR USE THE THE DOT
+                    ABOVE AND DRAG IT OVER<span
+                        >TO WIN THE GAME, CONNECT 4 SAME DOTS VERTICALLY,
+                        HORIZONTALLY OR DIAGONALLY</span
+                    >
+                    <span>ENJOY PLAYING</span>`;
+    block[0].style = `width:0; height:0;`;
+};
+
+const clearBoard = () => {
+    endGame = true;
+    goButton = false;
+    player = 0;
+    createDotsCounter = 1;
+    updateDotsCounter = 0;
+    headlineIntroFXCounter = 0;
+    headlineStartGameFXCounter = 0;
+    headlineVictoryFXCounter = 0;
+    start = false;
+    count = 0;
+    updateDots();
+    introHeadlineEffect();
+    audio[0].currentTime = 0;
+    seconds = 0;
+    minutes = 0;
+    gameBoard[0].style = `background-color:black; animation:none !important`;
+    desc[0].innerHTML = ``;
+    setTimeout(() => {
+        player = 1;
+        endGame = false;
+        gameTimeCount();
+        changeTokenColor();
+    }, 1500);
+};
+
 document.addEventListener("click", function (e) {
     if (e.target.className === "mute") {
         e.target.className = "play";
@@ -383,7 +542,16 @@ document.addEventListener("click", function (e) {
         audio[0].pause();
     }
     if (e.target.className === "clear") {
-        this.location.reload();
+        clearBoard();
+    }
+
+    if (e.target.className === "modeOption1v1") {
+        setGameMode();
+    }
+
+    if (e.target.className === "modeOption1vCPU") {
+        setGameMode();
+        gameVersusCPU = true;
     }
 });
 
@@ -439,7 +607,7 @@ const runVictoryEffects = () => {
     setTimeout(() => {
         audio[0].volume = 0.6;
     }, 3000);
-    setDotHoverFX();
+    // setDotHoverFX();
     victoryHeadlineEffect();
     hand[0].style = ` background-image: url("./assets/handsOpen.png");  width:12vw !important; margin-top:0; margin-bottom:1vmax;   animation: fadeIn 1.5s;  height:22vh !important;`;
     user[0].style = `margin-bottom:2vmax; text-align:center; margin-left:0;`;
@@ -492,26 +660,24 @@ const noWinner = () => {
     myAudioDraw.play();
 };
 
-const setDotHoverFX = () => {
-    document.addEventListener("mouseover", function (e) {
-        let color = e.target.color;
-        if (
-            e.target.className == "dot" ||
-            e.target.className == "player1" ||
-            e.target.className == "player2"
-        ) {
-            allDots[e.target.id - 1].style =
-                "background-color:unset !important";
+// const setDotHoverFX = () => {
+//     document.addEventListener("mouseover", function (e) {
+//         let color = e.target.color;
+//         if (
+//             e.target.className == "dot" ||
+//             e.target.className == "player1" ||
+//             e.target.className == "player2"
+//         ) {
+//             allDots[e.target.id - 1].style =
+//                 "background-color:unset !important";
 
-            setTimeout(() => {
-                allDots[e.target.id - 1].style = `${color} !important`;
-            }, 500);
-        }
-    });
-};
+//             setTimeout(() => {
+//                 allDots[e.target.id - 1].style = `${color} !important`;
+//             }, 500);
+//         }
+//     });
+// };
 
-let seconds = 1;
-let minutes = 0;
 const gameTimeCount = () => {
     if (endGame) {
         return;
@@ -528,10 +694,107 @@ const gameTimeCount = () => {
     }
     if (minutes >= 1) {
         desc[0].innerHTML = `TIME ELAPSED <div>${minutes} MIN  ${seconds} SEC</div>`;
-       desc[0].style = `height:unset; animation: textDot 1s infinite ease-in-out`;
+        desc[0].style = `height:unset; animation: textDot 1s infinite ease-in-out`;
     } else {
         desc[0].innerHTML = `TIME ELAPSED <div>${seconds} SEC</div>`;
-          desc[0].style = `height:unset; animation:none !important;`;
+        desc[0].style = `height:unset; animation:none !important;`;
     }
+};
 
+const runCPU = () => {
+    if (!endGame) {
+        block[0].style = `width:100vw; height:100vh;`;
+        let countCC = 1;
+
+        setTimeout(() => {
+            let random = -Math.floor(Math.random() * 7 - 2);
+            if (random === 0) {
+                random = -Math.floor(Math.random() * 7 - 2);
+            }
+
+            let helper = [];
+            console.log(lastMove);
+
+            if (lastMove - 3 < 0) {
+                allDots.forEach((dot) => {
+                    if (dot.className === "dot") {
+                        helper.push(dot);
+                    }
+                });
+                helper[helper.length - 1].className = "player2";
+            } else if (
+                allDots[lastMove - 2] &&
+                allDots[lastMove - 2].className === "dot"
+            ) {
+                allDots.forEach((dot) => {
+                    if (dot.className === "dot") {
+                        helper.push(dot);
+                    }
+                });
+                console.log("warn", warning4Victory, "lst", lastMove);
+                if (warning4Victory === lastMove) {
+                    if (warning4Victory + 2 === lastMove + 2) {
+                        console.log("HELPER", lastMoveHelper);
+                        if (
+                            allDots[lastMoveHelper + 6] &&
+                            allDots[lastMoveHelper + 6].className === "dot"
+                        ) {
+                            allDots[lastMoveHelper + 6].className = "player2";
+                        } else {
+                            allDots[lastMoveHelper - 1].className = "player2";
+                        }
+                    } else if (
+                        allDots[lastMove - 2].className &&
+                        allDots[lastMove - 2].className === "dot"
+                    ) {
+                        if (warning4Victory + 3 === lastMove + 3) {
+                            allDots[lastMove + 2].className = "player2";
+                        }
+                        if (allDots[lastMoveHelper + 7].className === "dot") {
+                            allDots[lastMoveHelper + 7].className = "player2";
+                        } else {
+                            allDots[lastMoveHelper - 1].className = "player2";
+                        }
+                    } else if (allDots[lastMove - 8].className === "dot") {
+                        allDots[lastMove - 8].className = "player2";
+                    }
+                } else if (
+                    lastMove <= 33 &&
+                    allDots[lastMove + 8].className === "dot"
+                ) {
+                    helper[helper.length - 1].className = "player2";
+                } else if (
+                    allDots[lastMove - 8] &&
+                    allDots[lastMove - 8].className === "dot"
+                ) {
+                    helper[helper.length - 1].className = "player2";
+                } else {
+                    allDots[lastMove - 2].className = "player2";
+                }
+            } else if (allDots[lastMove - 1].className === "dot") {
+                allDots[lastMove - 1].className = "player2";
+            } else if (
+                allDots[lastMove - 8] &&
+                allDots[lastMove - 8].className === "dot"
+            ) {
+                allDots[lastMove - 8].className = "player2";
+            } else {
+                allDots.forEach((dot) => {
+                    if (dot.className === "dot") {
+                        helper.push(dot);
+                    }
+                });
+                console.log("helper", helper);
+                helper[helper.length - 1].className === "dot";
+            }
+            if (letMusicPlay) {
+                myAudio.play();
+            }
+            victoryCheck();
+            player = 1;
+
+            changeTokenColor();
+            block[0].style = `width:0; height:0;`;
+        }, 1500);
+    }
 };

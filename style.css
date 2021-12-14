@@ -43,13 +43,17 @@ body {
 }
 
 .headline div {
+    width:9vh;
+    height:9vh;
     visibility: hidden;
     border: 1px solid cyan;
-    padding: 0 1vmax;
     border-radius: 50%;
-    margin-bottom: 2vh;
+    margin:1vh;
     color: yellow;
+    text-align: center;
+   line-height: 150%;
 }
+
 
 main {
     background-color: rgba(255, 255, 255, 0.158);
@@ -196,17 +200,20 @@ main {
 }
 
 .user {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     text-align: left;
     margin-top: 1vmax;
     font-size: 3vmax;
     color: white;
     letter-spacing: 3px;
-    width: 16vw;
-    margin-left: 2vw;
+    width: 14vw;
 }
 
 .user span {
     letter-spacing: 0;
+    margin-left: 1vmax;
 }
 
 .description span:nth-child(3) {
@@ -238,8 +245,8 @@ main {
     color: white;
     background-image: url("./assets/arrowUp.png");
     background-size: cover;
-    width: 3vmax;
-    height: 3vmax;
+    width: 0;
+    height: 0;
     filter: invert(100%);
     margin-bottom: 1.5vmax;
     margin-top: -3vmax !important;
@@ -273,6 +280,7 @@ main {
 
 .play {
     background-image: url("./assets/play.png");
+    visibility: hidden;
 }
 
 .audio {
@@ -375,6 +383,38 @@ main {
 
     50% {
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.685);
+    }
+
+    100% {
+        box-shadow: none;
+    }
+}
+
+@keyframes buttonLight {
+    0% {
+        box-shadow: none;
+    }
+
+    50% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.685);
+        background-color: rgb(77, 31, 71);
+        border-color: yellow;
+    }
+
+    100% {
+        box-shadow: none;
+    }
+}
+
+@keyframes buttonLight2 {
+    0% {
+        box-shadow: none;
+    }
+
+    50% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.685);
+        background-color: rgba(0, 255, 255, 0.76);
+        border-color: yellow;
     }
 
     100% {
@@ -535,4 +575,66 @@ main {
     text-align: center;
     animation: fadeIn 2s infinite;
     visibility: hidden;
+}
+
+.blockScreen {
+    position: fixed;
+    left: 0;
+    height: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 5;
+}
+
+.gameMode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 20vw;
+    margin-top: -2vmax;
+}
+
+.modeOption1v1,
+.modeOption1vCPU {
+    cursor: pointer;
+    padding: 1vmax;
+    margin: 1.5vmax;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border: 1px solid rgb(101, 243, 165);
+    border-radius: 3vh;
+    width: 15vw;
+    height: 10vh;
+    color: yellow;
+    font-size: 2vmax;
+    text-align: center;
+    font-family: "Poller One", cursive;
+    z-index: 6;
+    transition: 0.1s;
+    animation: 1s buttonLight2 3s ease-in-out;
+}
+
+.modeOption1vCPU {
+    animation: 0.8s buttonLight 3s ease-in-out;
+}
+
+.modeOption1v1:hover {
+    background-color: rgba(0, 255, 255, 0.76);
+    border-color: yellow;
+
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.685);
+}
+
+.modeOption1vCPU:hover {
+    background-color: rgb(77, 31, 71);
+    border-color: yellow;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.685);
+}
+
+.modeOptionHead {
+    color: white;
+    animation: 2s fadeInControls 1.5s;
+   font-size: 2.5vmax;
 }

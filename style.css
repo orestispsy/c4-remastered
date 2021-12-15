@@ -192,6 +192,14 @@ main {
     z-index: 3;
     animation: backlight 3s infinite ease-in-out;
 }
+.tokenBack{
+ 
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
 
 .token:hover {
     cursor: pointer;
@@ -201,20 +209,22 @@ main {
 
 .user {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+
+    justify-content: center;
     text-align: center;
     margin-top: 1vmax;
-    font-size: 2.5vmax;
+    font-size: 2vmax;
     color: white;
-    letter-spacing: 2px;
-    width:14vw;
+    letter-spacing: 1px;
+    width:18vw;
 
 }
 
 .user span {
     letter-spacing: 0;
-    margin-left: 1vmax;
+
+    width:2vmax;
+    height:2vmax;
 }
 
 .description span:nth-child(3) {
@@ -651,15 +661,24 @@ background-size: cover;
 
 .totalWins{
     width:15w;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+}
+
+.total{
 
     display: flex;
+    width:12vw;
+    justify-content: space-around;
 }
 
 .p1Total, .p2Total{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin:1vmax;
+
 background-color:cyan;
 border-radius:50%;
 width:0;
@@ -674,4 +693,11 @@ font-size:2vmax;
 .p2Total{
 background-color: rgb(204, 0, 255) ;
 color:white
+}
+
+.totalWinsHead {
+
+    font-size:2vmax;
+    color:white;
+    letter-spacing: 1px;
 }

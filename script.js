@@ -18,6 +18,7 @@ var refresh = document.querySelectorAll(".refresh");
 var gameMode = document.querySelectorAll(".gameMode");
 var p1Total = document.querySelectorAll(".p1Total");
 var p2Total = document.querySelectorAll(".p2Total");
+var totalWinsHead = document.querySelectorAll(".totalWinsHead");
 var gameVersusCPU = false;
 var endGame = false;
 var goButton = false;
@@ -30,7 +31,7 @@ var headlineVictoryFXCounter = 0;
 var box;
 var columns = {};
 var count = 0;
-var start = false;
+
 var allDots;
 var myAudio = new Audio("./assets/throw.mp3");
 var myAudioVictory = new Audio("./assets/victory.mp3");
@@ -101,7 +102,7 @@ const buildColumns = (e) => {
 };
 
 setTimeout(() => {
-    controls[0].style = `visibility:visible;animation:fadeInControls 1.8s;`;
+    controls[0].style = `visibility:visible;animation:fadeIn 2s;`;
 }, 800);
 
 setTimeout(() => {
@@ -119,9 +120,7 @@ const setPlayerMove = (e) => {
     }
 
     clear[0].innerHTML = "Clear Board";
-    refresh[0].style = `margin:1vmax;
-    width:3vmax;
-    height:3vmax;`;
+    refresh[0].style = `margin:0.5vmax; width:3vmax; height:3vmax;`;
     for (let j = 1; j <= 7; j++) {
         for (let jj = 5; jj >= 0; jj--) {
             if (columns[j][jj].id && columns[j][jj].id == e) {
@@ -184,6 +183,301 @@ const setPlayerMove = (e) => {
     }
 };
 
+const changeTokenColor = (e) => {
+    if (!endGame) {
+        if (player == 1) {
+            token[0].id = `p1`;
+
+            token[0].style = `box-shadow:0 0 25px yellow`;
+            setTimeout(() => {
+                token[0].style = `animation: backlight2 2s infinite alternate,shake 4s infinite alternate`;
+            }, 2000);
+
+            user[0].innerHTML = "PLAYER <span style='color:cyan'>1</span>";
+        } else if (player == 2) {
+            token[0].id = `p2`;
+            token[0].style = `box-shadow:0 0 25px yellow`;
+            setTimeout(() => {
+                token[0].style = `animation: backlight2 2s infinite alternate,shake 4s infinite alternate`;
+            }, 2000);
+            user[0].innerHTML =
+                "PLAYER <span style='color:rgb(204, 0, 255) !important;'>2</span>";
+        } else if (player == 0) {
+            token[0].id = `p0`;
+            user[0].innerHTML = "WELCOME";
+        }
+    } else {
+        if (player == 1) {
+            user[0].innerHTML = "PLAYER 2 WINS";
+        } else if (player == 2) {
+            user[0].innerHTML = "PLAYER 1 WINS";
+        }
+    }
+};
+
+changeTokenColor();
+
+const drawCheck = () => {
+    let emptySlots = 0;
+    allDots.forEach((dot) => {
+        if (dot.className === "dot") {
+            emptySlots++;
+        }
+    });
+    if (emptySlots === 0) {
+        noWinner();
+    }
+};
+
+const setGameMode = () => {
+    gameMode[0].innerHTML = "";
+    gameMode[0].style = "width:0; height:0; margin:0";
+    arrow[0].style = `    width: 3vmax;
+    height: 3vmax;`;
+    desc[0].innerHTML = `
+         TO START CLICK OVER THE SLOTS OF THE BOARD, OR DRAG THE DOT ABOVE
+            <span>CONNECT 4 SAME DOTS IN THREE WAYS: VERTICALLY,
+                        HORIZONTALLY OR DIAGONALLY</span
+                    >
+                    <span>ENJOY PLAYING</span>`;
+    block[0].style = `width:0; height:0;`;
+};
+
+const clearBoard = () => {
+    endGame = false;
+    goButton = false;
+    player = 0;
+    createDotsCounter = 1;
+    updateDotsCounter = 0;
+    headlineIntroFXCounter = 0;
+    headlineStartGameFXCounter = 0;
+    headlineVictoryFXCounter = 0;
+
+    count = 0;
+    updateDots();
+    introHeadlineEffect();
+    audio[0].currentTime = 0;
+    seconds = 0;
+    minutes = 0;
+    hand[0].style = `    background-image: url("./assets/hand.png");
+
+    width: 12vw;
+    height: 11vh;`;
+    clear[0].innerHTML = "Clear Board";
+    clear[0].style = `animation:none`;
+    gameBoard[0].style = `background-color:black; animation:none !important`;
+    desc[0].style = `height:unset; width: 12vw; text-align:center`;
+    desc[0].innerHTML = `CLEANING THE BOARD`;
+    setTimeout(() => {
+        changeTokenColor();
+    }, 200);
+    setTimeout(() => {
+        player = 1;
+        endGame = false;
+        gameTimeCount();
+        changeTokenColor();
+    }, 1500);
+};
+
+const introHeadlineEffect = () => {
+    if (headlineIntroFXCounter < headline[0].children.length) {
+        setTimeout(() => {
+            headline[0].children[
+                headlineIntroFXCounter
+            ].style = `visibility:visible`;
+            headlineIntroFXCounter++;
+            introHeadlineEffect();
+        }, 100);
+    }
+};
+
+introHeadlineEffect();
+
+const startGameHeadlineEffect = (e) => {
+    if (headlineStartGameFXCounter < headline[0].children.length) {
+        headline[0].children[
+            headlineStartGameFXCounter
+        ].style = `    animation: backlight2 1s infinite ease-in-out; visibility:visible;`;
+        headlineStartGameFXCounter++;
+        setTimeout(() => {
+            if (headline[0].children[headlineStartGameFXCounter]) {
+                headline[0].children[
+                    headlineStartGameFXCounter
+                ].style = `animation: backlight2 1s infinite ease-in-out;`;
+            }
+            startGameHeadlineEffect();
+        }, 50);
+    }
+};
+
+const victoryHeadlineEffect = (e) => {
+    setTimeout(() => {
+        if (headline[0].children[headlineVictoryFXCounter]) {
+            headline[0].children[
+                headlineVictoryFXCounter
+            ].style = `animation:textDot 1s infinite ; visibility:visible;`;
+            headlineVictoryFXCounter++;
+        }
+        victoryHeadlineEffect();
+    }, 50);
+};
+
+const runVictoryEffects = () => {
+    p1Total[0].style = `width:7vh;height:7vh; border:1px solid yellow`;
+    p2Total[0].style = `width:7vh;height:7vh; border:1px solid yellow`;
+    if (player === 1) {
+        player1Total++;
+        p1Total[0].innerHTML = `${player1Total}`;
+        p2Total[0].innerHTML = `${player2Total}`;
+        totalWinsHead[0].innerHTML = "SCORE";
+        totalWinsHead[0].style = "margin:1vmax";
+    } else {
+        player2Total++;
+        p1Total[0].innerHTML = `${player1Total}`;
+        p2Total[0].innerHTML = `${player2Total}`;
+    }
+    endGame = true;
+    audio[0].volume = 0.5;
+    audio[0].currentTime = 65.5;
+    myAudioVictory.play();
+    clear[0].innerHTML = `Next Round`;
+    clear[0].style = " animation: textDot 2s infinite alternate";
+    setTimeout(() => {
+        audio[0].volume = 0.6;
+    }, 3000);
+    // setDotHoverFX();
+    victoryHeadlineEffect();
+    hand[0].style = ` background-image: url("./assets/handsOpen.png");  width:12vw !important; margin-top:0;  animation: fadeIn 1.5s;  height:22vh !important;`;
+    user[0].style = `margin-bottom:2vmax; text-align:center; margin-left:0; `;
+
+    ///////////////////////////////////////////////////////////// START MUSIC ANIMATION FX////////////////////////////////////////////////
+    gameBoard[0].style = `animation: backLight 2s infinite alternate`;
+
+    if (!letMusicPlay) {
+        gameBoard[0].style = `animation: backLight 0.5s infinite alternate`;
+        token[0].style = `animation:shake 6s infinite ease-in-out !important, backlight2 2.5s infinite ease-in-out; !important`;
+    } else {
+        setTimeout(() => {
+            token[0].style = `box-shadow:0 0 50px  rgba(255, 255, 255)!important;`;
+        }, 100);
+        setTimeout(() => {
+                if (endGame){
+            token[0].style = `animation:shakeHover 6s infinite ease-in-out, backlight2 2.5s infinite ease-in-out; !important`;}
+        }, 500);
+        setTimeout(() => {
+            if (endGame) {
+                gameBoard[0].style = `animation: backLight 1s infinite alternate`;
+                token[0].style = `animation:shakeHover 4s infinite ease-in-out, backlight2 2.5s infinite ease-in-out; !important`;
+            }
+        }, 3000);
+        setTimeout(() => {
+                if (endGame){
+            token[0].style = `box-shadow:0 0 50px yellow`;
+            gameBoard[0].style = `animation: backLight 0.5s infinite alternate`;}
+        }, 6000);
+        setTimeout(() => {
+            if (endGame) {
+                token[0].style = `cursor:none; animation: shake 6s infinite ease-in-out, backlight3 2.5s infinite ease-in-out; !important`;
+            }
+        }, 7500);
+        setTimeout(() => {
+            if (endGame) {
+                gameBoard[0].style = `animation: backLight 0.2s infinite`;
+            }
+        }, 27000);
+    }
+
+    /////////////////////////////////////////////////////////////END MUSIC ANIMATION FX////////////////////////////////////////////////
+};
+
+const noWinner = () => {
+    clear[0].style = "margin-top:0vmax";
+    endGame = true;
+    gameBoard[0].style = `animation: backLight 4s infinite`;
+    victoryHeadlineEffect();
+    user[0].remove();
+    hand[0].remove();
+    token[0].id = "draw";
+    controlsTop[0].style = `min-height:unset;`;
+    controls[0].style = `justify-content:center; visibility:visible; `;
+    elem.className = "draw";
+    elem.innerHTML = "DRAW";
+    controlsTop[0].prepend(elem);
+    myAudioDraw.play();
+};
+
+// const setDotHoverFX = () => {
+//     document.addEventListener("mouseover", function (e) {
+//         let color = e.target.color;
+//         if (
+//             e.target.className == "dot" ||
+//             e.target.className == "player1" ||
+//             e.target.className == "player2"
+//         ) {
+//             allDots[e.target.id - 1].style =
+//                 "background-color:unset !important";
+
+//             setTimeout(() => {
+//                 allDots[e.target.id - 1].style = `${color} !important`;
+//             }, 500);
+//         }
+//     });
+// };
+
+const gameTimeCount = () => {
+    if (endGame) {
+        return;
+    }
+    setTimeout(() => {
+        if (seconds >= 59) {
+            minutes++;
+        }
+        seconds++;
+        gameTimeCount();
+    }, 1000);
+    if (seconds >= 60) {
+        seconds = 0;
+    }
+    if (minutes >= 1) {
+        desc[0].innerHTML = `TIME ELAPSED <div>${minutes} MIN  ${seconds} SEC</div>`;
+        desc[0].style = `height:unset; animation: textDot 1s infinite ease-in-out`;
+    } else {
+        desc[0].innerHTML = `TIME ELAPSED <div>${seconds} SEC</div>`;
+        desc[0].style = `height:unset; animation:none !important;`;
+    }
+};
+
+document.addEventListener("click", function (e) {
+    if (e.target.className === "mute") {
+        e.target.className = "play";
+        letMusicPlay = true;
+        audio[0].play();
+    } else if (e.target.className === "play") {
+        e.target.className = "mute";
+        letMusicPlay = false;
+        audio[0].pause();
+    }
+    if (e.target.className === "clear") {
+        clearBoard();
+        if (clear[0].innerHTML === "Next Round") {
+            clear[0].style = `visibility:invisible`;
+        }
+    }
+
+    if (e.target.className === "modeOption1v1") {
+        setGameMode();
+    }
+
+    if (e.target.className === "modeOption1vCPU") {
+        setGameMode();
+        gameVersusCPU = true;
+    }
+
+    if (e.target.className === "refresh") {
+        this.location.reload();
+    }
+});
+
 ///////////////////////////////////////// Start THROW / DRAG TOKEN EFFECTS /////////////////////////////////
 
 document.addEventListener("mousedown", function (e) {
@@ -244,6 +538,27 @@ document.addEventListener("mousedown", function (e) {
     }
 });
 
+document.addEventListener("mouseup", function (e) {
+    if (goButton && !endGame) {
+        if (
+            e.target.className == "dot" ||
+            e.target.className == "player1" ||
+            e.target.className == "player2"
+        ) {
+            ///////////////////////////////////////// Start CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
+
+            setPlayerMove(e.target.id);
+        }
+    }
+    token[0].style = `position:unset; `;
+    changeTokenColor();
+    goButton = false;
+    body[0].style = `cursor:unset !important;`;
+
+    ///////////////////////////////////////// End CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
+});
+
+///////////////////// RESPONSIVE DRAG FX/////////////////////
 document.addEventListener("touchmove", function (e) {
     if (e.target.className === "token" && e.target.id !== "p0") {
         e.target.style = `margin-top:0; position:fixed; top:${
@@ -257,7 +572,7 @@ document.addEventListener("touchstart", function (e) {
         goButton = true;
     }
 });
-
+///////////////////////////////////////// Start CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
 document.addEventListener("touchend", function (e) {
     if (firstClick && goButton) {
         console.log(allDots[6].offsetTop, allDots[6].offsetLeft);
@@ -287,74 +602,10 @@ document.addEventListener("touchend", function (e) {
         goButton = false;
     }
 });
+///////////////////////////////////////// End CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
+///////////////////// RESPONSIVE DRAG FX/////////////////////
 
 ///////////////////////////////////////// End THROW / DRAG TOKEN EFFECTS ////////////////////////////////
-
-document.addEventListener("mouseup", function (e) {
-    if (goButton && !endGame) {
-        if (
-            e.target.className == "dot" ||
-            e.target.className == "player1" ||
-            e.target.className == "player2"
-        ) {
-            ///////////////////////////////////////// Start CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
-
-            setPlayerMove(e.target.id);
-        }
-    }
-    token[0].style = `position:unset; `;
-    changeTokenColor();
-    goButton = false;
-    body[0].style = `cursor:unset !important;`;
-
-    ///////////////////////////////////////// End CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
-});
-
-const changeTokenColor = (e) => {
-    if (!endGame) {
-        if (player == 1) {
-            token[0].id = `p1`;
-
-            token[0].style = `box-shadow:0 0 25px yellow`;
-            setTimeout(() => {
-                token[0].style = `animation: backlight2 2s infinite alternate,shake 4s infinite alternate`;
-            }, 2000);
-
-            user[0].innerHTML = "PLAYER <span style='color:cyan'>1</span>";
-        } else if (player == 2) {
-            token[0].id = `p2`;
-            token[0].style = `box-shadow:0 0 25px yellow`;
-            setTimeout(() => {
-                token[0].style = `animation: backlight2 2s infinite alternate,shake 4s infinite alternate`;
-            }, 2000);
-            user[0].innerHTML =
-                "PLAYER <span style='color:rgb(204, 0, 255) !important;'>2</span>";
-        } else if (player == 0) {
-            token[0].id = `p0`;
-            user[0].innerHTML = "WELCOME";
-        }
-    } else {
-        if (player == 1) {
-            user[0].innerHTML = "PLAYER 2 WINS";
-        } else if (player == 2) {
-            user[0].innerHTML = "PLAYER 1 WINS";
-        }
-    }
-};
-
-changeTokenColor();
-
-const drawCheck = () => {
-    let emptySlots = 0;
-    allDots.forEach((dot) => {
-        if (dot.className === "dot") {
-            emptySlots++;
-        }
-    });
-    if (emptySlots === 0) {
-        noWinner();
-    }
-};
 
 const victoryCheck = () => {
     drawCheck();
@@ -483,236 +734,6 @@ const victoryCheck = () => {
     }
 };
 
-const setGameMode = () => {
-    gameMode[0].innerHTML = "";
-    gameMode[0].style = "width:0; height:0; margin:0";
-    arrow[0].style = `    width: 3vmax;
-    height: 3vmax;`;
-    desc[0].innerHTML = `
-         TO START CLICK OVER THE SLOTS OF THE BOARD, OR DRAG THE DOT ABOVE
-            <span>CONNECT 4 SAME DOTS IN THREE WAYS: VERTICALLY,
-                        HORIZONTALLY OR DIAGONALLY</span
-                    >
-                    <span>ENJOY PLAYING</span>`;
-    block[0].style = `width:0; height:0;`;
-};
-
-const clearBoard = () => {
-    endGame = true;
-    goButton = false;
-    player = 0;
-    createDotsCounter = 1;
-    updateDotsCounter = 0;
-    headlineIntroFXCounter = 0;
-    headlineStartGameFXCounter = 0;
-    headlineVictoryFXCounter = 0;
-    start = false;
-    count = 0;
-    updateDots();
-    introHeadlineEffect();
-    audio[0].currentTime = 0;
-    seconds = 0;
-    minutes = 0;
-     clear[0].innerHTML = "Clear Board";
-     clear[0].style = `animation:none`;
-    gameBoard[0].style = `background-color:black; animation:none !important`;
-    desc[0].style = `height:unset;`;
-    desc[0].innerHTML = ``;
-    setTimeout(() => {
-        player = 1;
-        endGame = false;
-        gameTimeCount();
-        changeTokenColor();
-    }, 1500);
-};
-
-document.addEventListener("click", function (e) {
-    if (e.target.className === "mute") {
-        e.target.className = "play";
-        letMusicPlay = true;
-        audio[0].play();
-    } else if (e.target.className === "play") {
-        e.target.className = "mute";
-        letMusicPlay = false;
-        audio[0].pause();
-    }
-    if (e.target.className === "clear") {
-        clearBoard();
-       }
-
-    if (e.target.className === "modeOption1v1") {
-        setGameMode();
-    }
-
-    if (e.target.className === "modeOption1vCPU") {
-        setGameMode();
-        gameVersusCPU = true;
-    }
-
-    if (e.target.className === "refresh") {
-        this.location.reload();
-    }
-});
-
-const introHeadlineEffect = () => {
-    if (headlineIntroFXCounter < headline[0].children.length) {
-        setTimeout(() => {
-            headline[0].children[
-                headlineIntroFXCounter
-            ].style = `visibility:visible`;
-            headlineIntroFXCounter++;
-            introHeadlineEffect();
-        }, 100);
-    }
-};
-
-introHeadlineEffect();
-
-const startGameHeadlineEffect = (e) => {
-    if (headlineStartGameFXCounter < headline[0].children.length) {
-        headline[0].children[
-            headlineStartGameFXCounter
-        ].style = `    animation: backlight2 1s infinite ease-in-out; visibility:visible;`;
-        headlineStartGameFXCounter++;
-        setTimeout(() => {
-            if (headline[0].children[headlineStartGameFXCounter]) {
-                headline[0].children[
-                    headlineStartGameFXCounter
-                ].style = `animation: backlight2 1s infinite ease-in-out;`;
-            }
-            startGameHeadlineEffect();
-        }, 50);
-    }
-};
-
-const victoryHeadlineEffect = (e) => {
-    setTimeout(() => {
-        if (headline[0].children[headlineVictoryFXCounter]) {
-            headline[0].children[
-                headlineVictoryFXCounter
-            ].style = `animation:textDot 1s infinite ; visibility:visible;`;
-            headlineVictoryFXCounter++;
-        }
-        victoryHeadlineEffect();
-    }, 50);
-};
-
-const runVictoryEffects = () => {
-    p1Total[0].style = `width:7vh;height:7vh; border:1px solid yellow`;
-    p2Total[0].style = `width:7vh;height:7vh; border:1px solid yellow`;
-    if (player === 1) {
-        player1Total++;
-        p1Total[0].innerHTML = `${player1Total}`;
-                p2Total[0].innerHTML = `${player2Total}`;
-    } else {
-        player2Total++;
-            p1Total[0].innerHTML = `${player1Total}`;
-        p2Total[0].innerHTML = `${player2Total}`;
-    }
-    endGame = true;
-    audio[0].volume = 0.5;
-    audio[0].currentTime = 65.5;
-    myAudioVictory.play();
-     clear[0].innerHTML=`Next Round`
-     clear[0].style =
-         "margin-top:2vmax; animation: textDot 2s infinite alternate";
-    setTimeout(() => {
-        audio[0].volume = 0.6;
-    }, 3000);
-    // setDotHoverFX();
-    victoryHeadlineEffect();
-    hand[0].style = ` background-image: url("./assets/handsOpen.png");  width:12vw !important; margin-top:0; margin-bottom:1vmax;   animation: fadeIn 1.5s;  height:22vh !important;`;
-    user[0].style = `margin-bottom:2vmax; text-align:center; margin-left:0; `;
-
-    ///////////////////////////////////////////////////////////// START MUSIC ANIMATION FX////////////////////////////////////////////////
-    gameBoard[0].style = `animation: backLight 2s infinite alternate`;
-
-    if (!letMusicPlay) {
-        gameBoard[0].style = `animation: backLight 0.5s infinite alternate`;
-        token[0].style = `animation:shake 6s infinite ease-in-out !important, backlight2 2.5s infinite ease-in-out; !important`;
-    } else {
-        setTimeout(() => {
-            token[0].style = `box-shadow:0 0 50px  rgba(255, 255, 255)!important;`;
-        }, 100);
-        setTimeout(() => {
-            token[0].style = `animation:shakeHover 6s infinite ease-in-out, backlight2 2.5s infinite ease-in-out; !important`;
-        }, 500);
-        setTimeout(() => {
-            gameBoard[0].style = `animation: backLight 1s infinite alternate`;
-            token[0].style = `animation:shakeHover 4s infinite ease-in-out, backlight2 2.5s infinite ease-in-out; !important`;
-        }, 3000);
-        setTimeout(() => {
-            token[0].style = `box-shadow:0 0 50px yellow`;
-            gameBoard[0].style = `animation: backLight 0.5s infinite alternate`;
-        }, 6000);
-        setTimeout(() => {
-            token[0].style = `cursor:none; animation: shake 6s infinite ease-in-out, backlight3 2.5s infinite ease-in-out; !important`;
-        }, 7500);
-        setTimeout(() => {
-            gameBoard[0].style = `animation: backLight 0.2s infinite`;
-        }, 27000);
-    }
-
-    /////////////////////////////////////////////////////////////END MUSIC ANIMATION FX////////////////////////////////////////////////
-};
-
-const noWinner = () => {
-    clear[0].style = "margin-top:0vmax";
-    endGame = true;
-    gameBoard[0].style = `animation: backLight 4s infinite`;
-    victoryHeadlineEffect();
-    user[0].remove();
-    hand[0].remove();
-    token[0].id = "draw";
-    controlsTop[0].style = `min-height:unset;`;
-    controls[0].style = `justify-content:center; visibility:visible; `;
-    elem.className = "draw";
-    elem.innerHTML = "DRAW";
-    controlsTop[0].prepend(elem);
-    myAudioDraw.play();
-};
-
-// const setDotHoverFX = () => {
-//     document.addEventListener("mouseover", function (e) {
-//         let color = e.target.color;
-//         if (
-//             e.target.className == "dot" ||
-//             e.target.className == "player1" ||
-//             e.target.className == "player2"
-//         ) {
-//             allDots[e.target.id - 1].style =
-//                 "background-color:unset !important";
-
-//             setTimeout(() => {
-//                 allDots[e.target.id - 1].style = `${color} !important`;
-//             }, 500);
-//         }
-//     });
-// };
-
-const gameTimeCount = () => {
-    if (endGame) {
-        return;
-    }
-    setTimeout(() => {
-        if (seconds >= 59) {
-            minutes++;
-        }
-        seconds++;
-        gameTimeCount();
-    }, 1000);
-    if (seconds >= 60) {
-        seconds = 0;
-    }
-    if (minutes >= 1) {
-        desc[0].innerHTML = `TIME ELAPSED <div>${minutes} MIN  ${seconds} SEC</div>`;
-        desc[0].style = `height:unset; animation: textDot 1s infinite ease-in-out`;
-    } else {
-        desc[0].innerHTML = `TIME ELAPSED <div>${seconds} SEC</div>`;
-        desc[0].style = `height:unset; animation:none !important;`;
-    }
-};
-
 const runCPU = () => {
     if (!endGame) {
         block[0].style = `width:100vw; height:100vh;`;
@@ -807,6 +828,6 @@ const runCPU = () => {
 
             changeTokenColor();
             block[0].style = `width:0; height:0;`;
-        }, 1500);
+        }, 2000);
     }
 };

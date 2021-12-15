@@ -107,13 +107,13 @@ setTimeout(() => {
 ///////////////////////////////////////// End CREATE BOARD /////////////////////////////////
 
 const setPlayerMove = (e) => {
-            if (letMusicPlay) {
-                audio[0].play();
-                play[0].style = `visibility:visible`;
-                startGameHeadlineEffect();
-            }
+    if (letMusicPlay) {
+        audio[0].play();
+        play[0].style = `visibility:visible`;
+        startGameHeadlineEffect();
+    }
 
-            clear[0].innerHTML = "Clear Board";
+    clear[0].innerHTML = "Clear Board";
     for (let j = 1; j <= 7; j++) {
         for (let jj = 5; jj >= 0; jj--) {
             if (columns[j][jj].id && columns[j][jj].id == e) {
@@ -245,41 +245,20 @@ document.addEventListener("touchmove", function (e) {
 });
 
 document.addEventListener("touchend", function (e) {
-    
     if (firstClick) {
-        console.log("e", e);
         console.log(allDots[6].offsetTop, allDots[6].offsetLeft);
-        for (let ii = 0; ii < allDots.length; ii++) {
-            console.log(ii)
+        for (let ii = allDots.length - 1; ii >= 0; ii--) {
+            console.log(ii);
 
             if (
-                allDots[ii].offsetLeft + 30 >
+                allDots[ii].offsetLeft + 2 * e.target.clientWidth + 30 >
                     e.target.offsetLeft + e.target.clientWidth + 30 &&
                 e.target.offsetLeft + e.target.clientWidth + 30 >
-                    allDots[ii].offsetLeft - 30 &&
+                    allDots[ii].offsetLeft + 2 * e.target.clientWidth - 30 &&
                 allDots[ii].offsetTop + 35 > e.target.offsetTop &&
                 e.target.offsetTop > allDots[ii].offsetTop - 35
             ) {
-
-                console.log(
-                    "dot",
-                    allDots[ii].offsetLeft,
-                    allDots[ii].offsetTop,
-                    "e",
-                    e.target.offsetLeft,
-                    e.target.offsetTop,
-                    "sums",
-                    e.target.clientWidth ,
-                                        e.target.offsetLeft + e.target.clientWidth + 30,
-                    allDots[ii].offsetLeft + 30,
-                    e.target.offsetLeft + e.target.clientWidth - 30
-                );
-                console.log(
-                    "YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
-                    ii,
-                    allDots[ii].id
-                );
-                setPlayerMove(ii);
+                setPlayerMove(Number(allDots[ii].id));
             }
 
             setTimeout(() => {
@@ -304,7 +283,6 @@ document.addEventListener("mouseup", function (e) {
             e.target.className == "player2"
         ) {
             ///////////////////////////////////////// Start CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
-    
 
             setPlayerMove(e.target.id);
         }

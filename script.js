@@ -14,7 +14,10 @@ var audio = document.querySelectorAll(".audio");
 var hand = document.querySelectorAll(".hand");
 var block = document.querySelectorAll(".blockScreen");
 var arrow = document.querySelectorAll(".arrow");
+var refresh = document.querySelectorAll(".refresh");
 var gameMode = document.querySelectorAll(".gameMode");
+var p1Total = document.querySelectorAll(".p1Total");
+var p2Total = document.querySelectorAll(".p2Total");
 var gameVersusCPU = false;
 var endGame = false;
 var goButton = false;
@@ -39,6 +42,8 @@ var lastMove;
 var lastMoveHelper;
 let seconds = 1;
 let minutes = 0;
+var player1Total = 0;
+var player2Total = 0;
 
 audio[0].volume = 0.6;
 myAudioVictory.volume = 0.4;
@@ -114,6 +119,9 @@ const setPlayerMove = (e) => {
     }
 
     clear[0].innerHTML = "Clear Board";
+    refresh[0].style = `margin:1vmax;
+    width:3vmax;
+    height:3vmax;`;
     for (let j = 1; j <= 7; j++) {
         for (let jj = 5; jj >= 0; jj--) {
             if (columns[j][jj].id && columns[j][jj].id == e) {
@@ -237,15 +245,21 @@ document.addEventListener("mousedown", function (e) {
 });
 
 document.addEventListener("touchmove", function (e) {
-    if (e.target.className === "token") {
+    if (e.target.className === "token" && e.target.id !== "p0") {
         e.target.style = `margin-top:0; position:fixed; top:${
             e.touches[0].clientY - 25
         }px; left:${e.touches[0].clientX - 25}px`;
     }
 });
 
+document.addEventListener("touchstart", function (e) {
+    if (firstClick && e.target.className === "token") {
+        goButton = true;
+    }
+});
+
 document.addEventListener("touchend", function (e) {
-    if (firstClick) {
+    if (firstClick && goButton) {
         console.log(allDots[6].offsetTop, allDots[6].offsetLeft);
         for (let ii = allDots.length - 1; ii >= 0; ii--) {
             console.log(ii);
@@ -270,6 +284,7 @@ document.addEventListener("touchend", function (e) {
         }
         if (e.target.className === "token") {
         }
+        goButton = false;
     }
 });
 
@@ -474,9 +489,8 @@ const setGameMode = () => {
     arrow[0].style = `    width: 3vmax;
     height: 3vmax;`;
     desc[0].innerHTML = `
-         TO START CLICK ON THE SLOTS OF THE BOARD, OR USE THE THE DOT
-                    ABOVE AND DRAG IT OVER<span
-                        >TO WIN THE GAME, CONNECT 4 SAME DOTS VERTICALLY,
+         TO START CLICK OVER THE SLOTS OF THE BOARD, OR DRAG THE DOT ABOVE
+            <span>CONNECT 4 SAME DOTS IN THREE WAYS: VERTICALLY,
                         HORIZONTALLY OR DIAGONALLY</span
                     >
                     <span>ENJOY PLAYING</span>`;
@@ -499,7 +513,10 @@ const clearBoard = () => {
     audio[0].currentTime = 0;
     seconds = 0;
     minutes = 0;
+     clear[0].innerHTML = "Clear Board";
+     clear[0].style = `animation:none`;
     gameBoard[0].style = `background-color:black; animation:none !important`;
+    desc[0].style = `height:unset;`;
     desc[0].innerHTML = ``;
     setTimeout(() => {
         player = 1;
@@ -521,7 +538,7 @@ document.addEventListener("click", function (e) {
     }
     if (e.target.className === "clear") {
         clearBoard();
-    }
+       }
 
     if (e.target.className === "modeOption1v1") {
         setGameMode();
@@ -530,6 +547,10 @@ document.addEventListener("click", function (e) {
     if (e.target.className === "modeOption1vCPU") {
         setGameMode();
         gameVersusCPU = true;
+    }
+
+    if (e.target.className === "refresh") {
+        this.location.reload();
     }
 });
 
@@ -577,18 +598,31 @@ const victoryHeadlineEffect = (e) => {
 };
 
 const runVictoryEffects = () => {
+    p1Total[0].style = `width:7vh;height:7vh; border:1px solid yellow`;
+    p2Total[0].style = `width:7vh;height:7vh; border:1px solid yellow`;
+    if (player === 1) {
+        player1Total++;
+        p1Total[0].innerHTML = `${player1Total}`;
+                p2Total[0].innerHTML = `${player2Total}`;
+    } else {
+        player2Total++;
+            p1Total[0].innerHTML = `${player1Total}`;
+        p2Total[0].innerHTML = `${player2Total}`;
+    }
     endGame = true;
     audio[0].volume = 0.5;
     audio[0].currentTime = 65.5;
     myAudioVictory.play();
-    clear[0].style = "margin-top:2vmax";
+     clear[0].innerHTML=`Next Round`
+     clear[0].style =
+         "margin-top:2vmax; animation: textDot 2s infinite alternate";
     setTimeout(() => {
         audio[0].volume = 0.6;
     }, 3000);
     // setDotHoverFX();
     victoryHeadlineEffect();
     hand[0].style = ` background-image: url("./assets/handsOpen.png");  width:12vw !important; margin-top:0; margin-bottom:1vmax;   animation: fadeIn 1.5s;  height:22vh !important;`;
-    user[0].style = `margin-bottom:2vmax; text-align:center; margin-left:0;`;
+    user[0].style = `margin-bottom:2vmax; text-align:center; margin-left:0; `;
 
     ///////////////////////////////////////////////////////////// START MUSIC ANIMATION FX////////////////////////////////////////////////
     gameBoard[0].style = `animation: backLight 2s infinite alternate`;

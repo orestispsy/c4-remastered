@@ -1,6 +1,5 @@
 var body = document.querySelectorAll("body");
 var gameBoard = document.querySelectorAll(".gameBoard");
-var elem = document.createElement("div");
 var dot = document.createElement("div");
 var token = document.querySelectorAll(".token");
 var user = document.querySelectorAll(".user");
@@ -9,6 +8,7 @@ var clear = document.querySelectorAll(".clear");
 var play = document.querySelectorAll(".play");
 var controls = document.querySelectorAll(".controls");
 var controlsTop = document.querySelectorAll(".controlsTop");
+var controlsBottom = document.querySelectorAll(".controlsBottom");
 var headline = document.querySelectorAll(".headline");
 var audio = document.querySelectorAll(".audio");
 var hand = document.querySelectorAll(".hand");
@@ -16,6 +16,7 @@ var block = document.querySelectorAll(".blockScreen");
 var arrow = document.querySelectorAll(".arrow");
 var refresh = document.querySelectorAll(".refresh");
 var gameMode = document.querySelectorAll(".gameMode");
+var totalScoreBox = document.querySelectorAll(".total");
 var p1Total = document.querySelectorAll(".p1Total");
 var p2Total = document.querySelectorAll(".p2Total");
 var totalWinsHead = document.querySelectorAll(".totalWinsHead");
@@ -108,6 +109,7 @@ setTimeout(() => {
 setTimeout(() => {
     buildColumns();
     allDots = document.querySelectorAll(".dot");
+    changeTokenColor();
 }, 1500);
 
 ///////////////////////////////////////// End CREATE BOARD /////////////////////////////////
@@ -120,6 +122,8 @@ const setPlayerMove = (e) => {
     }
 
     clear[0].innerHTML = "Clear Board";
+    clear[0].style = `    border:1px solid white;
+        padding:1vmax; `;
     refresh[0].style = `margin:0.5vmax; width:3vmax; height:3vmax;`;
     for (let j = 1; j <= 7; j++) {
         for (let jj = 5; jj >= 0; jj--) {
@@ -184,6 +188,7 @@ const setPlayerMove = (e) => {
 };
 
 const changeTokenColor = (e) => {
+      drawCheck();
     if (!endGame) {
         if (player == 1) {
             token[0].id = `p1`;
@@ -211,11 +216,13 @@ const changeTokenColor = (e) => {
             user[0].innerHTML = "PLAYER 2 WINS";
         } else if (player == 2) {
             user[0].innerHTML = "PLAYER 1 WINS";
+        } else if (player == 0) {
+            user[0].innerHTML = "DRAW";
         }
     }
 };
 
-changeTokenColor();
+
 
 const drawCheck = () => {
     let emptySlots = 0;
@@ -233,7 +240,7 @@ const setGameMode = () => {
     gameMode[0].innerHTML = "";
     gameMode[0].style = "width:0; height:0; margin:0";
     arrow[0].style = `    width: 3vmax;
-    height: 3vmax;`;
+    height: 3vmax;  margin-bottom:1vmax;   margin-top: -1vmax;`;
     desc[0].innerHTML = `
          TO START CLICK OVER THE SLOTS OF THE BOARD, OR DRAG THE DOT ABOVE
             <span>CONNECT 4 SAME DOTS IN THREE WAYS: VERTICALLY,
@@ -244,6 +251,12 @@ const setGameMode = () => {
 };
 
 const clearBoard = () => {
+    if(endGame){
+             setTimeout(() => {
+                  gameTimeCount();
+             }, 1500);
+
+    }
     endGame = false;
     goButton = false;
     player = 0;
@@ -252,30 +265,23 @@ const clearBoard = () => {
     headlineIntroFXCounter = 0;
     headlineStartGameFXCounter = 0;
     headlineVictoryFXCounter = 0;
-
     count = 0;
     updateDots();
     introHeadlineEffect();
     audio[0].currentTime = 0;
     seconds = 0;
     minutes = 0;
-    hand[0].style = `    background-image: url("./assets/hand.png");
-
-    width: 12vw;
-    height: 11vh;`;
+    hand[0].style = `    background-image: url("./assets/hand.png"); width: 12vw; height: 11vh;`;
     clear[0].innerHTML = "Clear Board";
-    clear[0].style = `animation:none`;
+    clear[0].style = `animation:none; border:1px solid white; padding:1vmax; `;
     gameBoard[0].style = `background-color:black; animation:none !important`;
     desc[0].style = `height:unset; width: 12vw; text-align:center`;
     desc[0].innerHTML = `CLEANING THE BOARD`;
-    setTimeout(() => {
-        changeTokenColor();
-    }, 200);
+
     setTimeout(() => {
         player = 1;
-        endGame = false;
-        gameTimeCount();
         changeTokenColor();
+      
     }, 1500);
 };
 
@@ -323,31 +329,38 @@ const victoryHeadlineEffect = (e) => {
 };
 
 const runVictoryEffects = () => {
-    p1Total[0].style = `width:7vh;height:7vh; border:1px solid yellow`;
-    p2Total[0].style = `width:7vh;height:7vh; border:1px solid yellow`;
+    totalScoreBox[0].style = `width:7vw; height:unset; margin-top:1vmax;`;
+    p1Total[0].style = `width:5vh;height:5vh; `;
+    p2Total[0].style = `width:5vh;height:5vh; `;
     if (player === 1) {
         player1Total++;
         p1Total[0].innerHTML = `${player1Total}`;
         p2Total[0].innerHTML = `${player2Total}`;
         totalWinsHead[0].innerHTML = "SCORE";
-        totalWinsHead[0].style = "margin:1vmax";
-    } else {
+       
+    } else if (player === 2) {
         player2Total++;
         p1Total[0].innerHTML = `${player1Total}`;
         p2Total[0].innerHTML = `${player2Total}`;
+        totalWinsHead[0].innerHTML = "SCORE";
+
     }
     endGame = true;
     audio[0].volume = 0.5;
     audio[0].currentTime = 65.5;
-    myAudioVictory.play();
+    if (letMusicPlay) {
+        myAudioVictory.play();
+    }
     clear[0].innerHTML = `Next Round`;
-    clear[0].style = " animation: textDot 2s infinite alternate";
+    clear[0].style =
+        " animation: textDot 2s infinite alternate; border:1px solid white; padding:1vmax;";
+
     setTimeout(() => {
         audio[0].volume = 0.6;
     }, 3000);
     // setDotHoverFX();
     victoryHeadlineEffect();
-    hand[0].style = ` background-image: url("./assets/handsOpen.png");  width:12vw !important; margin-top:0;  animation: fadeIn 1.5s;  height:22vh !important;`;
+    hand[0].style = ` background-image: url("./assets/handsOpen.png");margin-bottom:-1vmax;  width:12vw !important; margin-top:0;  animation: fadeIn 1.5s;  height:22vh !important;`;
     user[0].style = `margin-bottom:2vmax; text-align:center; margin-left:0; `;
 
     ///////////////////////////////////////////////////////////// START MUSIC ANIMATION FX////////////////////////////////////////////////
@@ -355,15 +368,17 @@ const runVictoryEffects = () => {
 
     if (!letMusicPlay) {
         gameBoard[0].style = `animation: backLight 0.5s infinite alternate`;
-        token[0].style = `animation:shake 6s infinite ease-in-out !important, backlight2 2.5s infinite ease-in-out; !important`;
+        token[0].style = `animation:shake 4s infinite ease-in-out !important, backlight2 2.5s infinite ease-in-out; !important`;
     } else {
+      let color
+      if (player==1){
+          color="cyan"
+      }else{color=`rgb(204, 0, 255)`}
         setTimeout(() => {
-            token[0].style = `box-shadow:0 0 50px  rgba(255, 255, 255)!important;`;
+            if (endGame) {
+                token[0].style = ` box-shadow:0 0 20px ${color}; margin-top:-4vmax; backlight2 2.5s infinite ease-in-out;`;
+            }
         }, 100);
-        setTimeout(() => {
-                if (endGame){
-            token[0].style = `animation:shakeHover 6s infinite ease-in-out, backlight2 2.5s infinite ease-in-out; !important`;}
-        }, 500);
         setTimeout(() => {
             if (endGame) {
                 gameBoard[0].style = `animation: backLight 1s infinite alternate`;
@@ -371,13 +386,14 @@ const runVictoryEffects = () => {
             }
         }, 3000);
         setTimeout(() => {
-                if (endGame){
-            token[0].style = `box-shadow:0 0 50px yellow`;
-            gameBoard[0].style = `animation: backLight 0.5s infinite alternate`;}
+            if (endGame) {
+                token[0].style = `box-shadow:0 0 50px yellow`;
+                gameBoard[0].style = `animation: backLight 0.5s infinite alternate`;
+            }
         }, 6000);
         setTimeout(() => {
             if (endGame) {
-                token[0].style = `cursor:none; animation: shake 6s infinite ease-in-out, backlight3 2.5s infinite ease-in-out; !important`;
+                token[0].style = `cursor:none; animation: shake 6s infinite ease-in-out, backlight3 5s infinite ease-in-out; !important`;
             }
         }, 7500);
         setTimeout(() => {
@@ -391,18 +407,23 @@ const runVictoryEffects = () => {
 };
 
 const noWinner = () => {
-    clear[0].style = "margin-top:0vmax";
-    endGame = true;
+    player=0
+    endGame=true
+     controls[0].style = `justify-content:center; visibility:visible; `;
     gameBoard[0].style = `animation: backLight 4s infinite`;
     victoryHeadlineEffect();
-    user[0].remove();
-    hand[0].remove();
-    token[0].id = "draw";
-    controlsTop[0].style = `min-height:unset;`;
-    controls[0].style = `justify-content:center; visibility:visible; `;
-    elem.className = "draw";
-    elem.innerHTML = "DRAW";
-    controlsTop[0].prepend(elem);
+  
+    hand[0].style = `width:0; height:0;`;
+   
+
+
+
+     setTimeout(() => {
+   
+           user[0].innerHTML="DRAW"
+            user[0].style = "font-size:2.5vmax;";
+          token[0].id = "draw";
+     }, 200);
     myAudioDraw.play();
 };
 
@@ -466,11 +487,13 @@ document.addEventListener("click", function (e) {
 
     if (e.target.className === "modeOption1v1") {
         setGameMode();
+        user[0].innerHTML = `GAMES RULES`;
     }
 
     if (e.target.className === "modeOption1vCPU") {
         setGameMode();
         gameVersusCPU = true;
+         user[0].innerHTML = `GAMES RULES`;
     }
 
     if (e.target.className === "refresh") {
@@ -490,7 +513,7 @@ document.addEventListener("mousedown", function (e) {
             player = 1;
             changeTokenColor();
             firstClick++;
-            arrow[0].style = "height:0; width:0;";
+            arrow[0].style = "height:0; width:0; animation:none; margin:0";
         }
         goButton = true;
 
@@ -608,7 +631,9 @@ document.addEventListener("touchend", function (e) {
 ///////////////////////////////////////// End THROW / DRAG TOKEN EFFECTS ////////////////////////////////
 
 const victoryCheck = () => {
-    drawCheck();
+  
+    if (!endGame) {
+
     for (let i = allDots.length - 1; i >= 0; i--) {
         //////////////////////////// START CHECKING FOR VERTICAL VICTORIES///////////////////////////////////////
 
@@ -731,103 +756,104 @@ const victoryCheck = () => {
             }
             //////////////////////////////// END CHECKING FOR DIAGONAL VICTORIES/////////////////////////////////////
         }
-    }
+    }}
 };
 
 const runCPU = () => {
-    if (!endGame) {
-        block[0].style = `width:100vw; height:100vh;`;
-        let countCC = 1;
+    if (endGame) {
+        return;
+    }
+    block[0].style = `width:100vw; height:100vh;`;
+    let countCC = 1;
 
-        setTimeout(() => {
-            let random = -Math.floor(Math.random() * 7 - 2);
-            if (random === 0) {
-                random = -Math.floor(Math.random() * 7 - 2);
-            }
+    setTimeout(() => {
+        let random = -Math.floor(Math.random() * 7 - 2);
+        if (random === 0) {
+            random = -Math.floor(Math.random() * 7 - 2);
+        }
 
-            let helper = [];
-            console.log(lastMove);
+        let helper = [];
+        console.log(lastMove);
 
-            if (lastMove - 3 < 0) {
-                allDots.forEach((dot) => {
-                    if (dot.className === "dot") {
-                        helper.push(dot);
-                    }
-                });
-                helper[helper.length - 1].className = "player2";
-            } else if (
-                allDots[lastMove - 2] &&
-                allDots[lastMove - 2].className === "dot"
-            ) {
-                allDots.forEach((dot) => {
-                    if (dot.className === "dot") {
-                        helper.push(dot);
-                    }
-                });
-                console.log("warn", warning4Victory, "lst", lastMove);
-                if (warning4Victory === lastMove) {
-                    if (warning4Victory + 2 === lastMove + 2) {
-                        console.log("HELPER", lastMoveHelper);
-                        if (
-                            allDots[lastMoveHelper + 6] &&
-                            allDots[lastMoveHelper + 6].className === "dot"
-                        ) {
-                            allDots[lastMoveHelper + 6].className = "player2";
-                        } else {
-                            allDots[lastMoveHelper - 1].className = "player2";
-                        }
-                    } else if (
-                        allDots[lastMove - 2].className &&
-                        allDots[lastMove - 2].className === "dot"
-                    ) {
-                        if (warning4Victory + 3 === lastMove + 3) {
-                            allDots[lastMove + 2].className = "player2";
-                        }
-                        if (allDots[lastMoveHelper + 7].className === "dot") {
-                            allDots[lastMoveHelper + 7].className = "player2";
-                        } else {
-                            allDots[lastMoveHelper - 1].className = "player2";
-                        }
-                    } else if (allDots[lastMove - 8].className === "dot") {
-                        allDots[lastMove - 8].className = "player2";
-                    }
-                } else if (
-                    lastMove <= 33 &&
-                    allDots[lastMove + 8].className === "dot"
-                ) {
-                    helper[helper.length - 1].className = "player2";
-                } else if (
-                    allDots[lastMove - 8] &&
-                    allDots[lastMove - 8].className === "dot"
-                ) {
-                    helper[helper.length - 1].className = "player2";
-                } else {
-                    allDots[lastMove - 2].className = "player2";
+        if (lastMove - 3 < 0) {
+            allDots.forEach((dot) => {
+                if (dot.className === "dot") {
+                    helper.push(dot);
                 }
-            } else if (allDots[lastMove - 1].className === "dot") {
-                allDots[lastMove - 1].className = "player2";
+            });
+            helper[helper.length - 1].className = "player2";
+        } else if (
+            allDots[lastMove - 2] &&
+            allDots[lastMove - 2].className === "dot"
+        ) {
+            allDots.forEach((dot) => {
+                if (dot.className === "dot") {
+                    helper.push(dot);
+                }
+            });
+            console.log("warn", warning4Victory, "lst", lastMove);
+            if (warning4Victory === lastMove) {
+                if (warning4Victory + 2 === lastMove + 2) {
+                    console.log("HELPER", lastMoveHelper);
+                    if (
+                        allDots[lastMoveHelper + 6] &&
+                        allDots[lastMoveHelper + 6].className === "dot"
+                    ) {
+                        allDots[lastMoveHelper + 6].className = "player2";
+                    } else {
+                        allDots[lastMoveHelper - 1].className = "player2";
+                    }
+                } else if (
+                    allDots[lastMove - 2].className &&
+                    allDots[lastMove - 2].className === "dot"
+                ) {
+                    if (warning4Victory + 3 === lastMove + 3) {
+                        allDots[lastMove + 2].className = "player2";
+                    }
+                    if (allDots[lastMoveHelper + 7].className === "dot") {
+                        allDots[lastMoveHelper + 7].className = "player2";
+                    } else {
+                        allDots[lastMoveHelper - 1].className = "player2";
+                    }
+                } else if (allDots[lastMove - 8].className === "dot") {
+                    allDots[lastMove - 8].className = "player2";
+                }
+            } else if (
+                lastMove <= 33 &&
+                allDots[lastMove + 8].className === "dot"
+            ) {
+                helper[helper.length - 1].className = "player2";
             } else if (
                 allDots[lastMove - 8] &&
                 allDots[lastMove - 8].className === "dot"
             ) {
-                allDots[lastMove - 8].className = "player2";
+                helper[helper.length - 1].className = "player2";
             } else {
-                allDots.forEach((dot) => {
-                    if (dot.className === "dot") {
-                        helper.push(dot);
-                    }
-                });
-                console.log("helper", helper);
-                helper[helper.length - 1].className === "dot";
+                allDots[lastMove - 2].className = "player2";
             }
-            if (letMusicPlay) {
-                myAudio.play();
-            }
-            victoryCheck();
-            player = 1;
+        } else if (allDots[lastMove - 1].className === "dot") {
+            allDots[lastMove - 1].className = "player2";
+        } else if (
+            allDots[lastMove - 8] &&
+            allDots[lastMove - 8].className === "dot"
+        ) {
+            allDots[lastMove - 8].className = "player2";
+        } else {
+            allDots.forEach((dot) => {
+                if (dot.className === "dot") {
+                    helper.push(dot);
+                }
+            });
+            console.log("helper", helper);
+            helper[helper.length - 1].className === "dot";
+        }
+        if (letMusicPlay) {
+            myAudio.play();
+        }
+        victoryCheck();
+        player = 1;
 
-            changeTokenColor();
-            block[0].style = `width:0; height:0;`;
-        }, 2000);
-    }
+        changeTokenColor();
+        block[0].style = `width:0; height:0;`;
+    }, 2000);
 };

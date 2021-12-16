@@ -176,13 +176,15 @@ main {
 }
 
 .controlsTop {
-    min-height: 38vh;
+    min-height: 43vh;
     max-height: 70vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
 }
+
+
 
 .token {
     width: 8vh;
@@ -259,8 +261,8 @@ main {
     width: 0;
     height: 0;
     filter: invert(100%);
-    margin-bottom: 1.5vmax;
-    margin-top: -3vmax !important;
+
+
 }
 
 .clear {
@@ -269,12 +271,16 @@ main {
     letter-spacing: 1px;
     font-family: "Poller One", cursive;
     font-size: 1.3vmax;
-    margin: 3vmax 0 2vmax 0;
+
     color: yellowgreen;
+
+    border-radius:3vh;
+
 }
 
 .clear:hover {
     animation: textDot 0.5s infinite;
+    background-color: rgba(0, 255, 115, 0.041);
 }
 
 .mute,
@@ -308,6 +314,8 @@ main {
     height: 11vh;
     filter: invert(100%);
     transform: scaleX(-1);
+    margin-top:-1vmax;
+    margin-bottom:1vmax;
 }
 
 .refresh {
@@ -611,7 +619,7 @@ background-size: cover;
     align-items: center;
     justify-content: center;
     width: 20vw;
-    margin-top: -2vmax;
+    margin-top: 2vmax;
 }
 
 .modeOption1v1,
@@ -660,15 +668,16 @@ background-size: cover;
 
 
 .totalWins{
-    width:15w;
+
     display: flex;
-    flex-direction:column;
+ 
     align-items: center;
     justify-content: center;
 }
 
 .total{
-
+    width:0;
+    height:0;
     display: flex;
     width:12vw;
     justify-content: space-around;
@@ -685,19 +694,22 @@ width:0;
 height:0;
 text-align: center;
 font-family: 'Black Ops One', cursive;
-color:rgba(8, 0, 0, 0.836);
-font-size:2vmax;
-
+color:rgb(163, 255, 42);
+font-size:1.5vmax;
+    text-shadow: 0 0 1px rgb(204, 0, 255, 0.5),0 0 1px rgb(204, 0, 255, 0.5), 0 0 1px rgb(204, 0, 255, 0.5),
+        0 0 1px rgb(204, 0, 255, 0.5);
 }
 
 .p2Total{
 background-color: rgb(204, 0, 255) ;
-color:white
+
+    text-shadow: 0 0 1px rgba(0, 255, 255, 0.5), 0 0 1px rgba(0, 255, 255, 0.5), 0 0 1px rgba(0, 255, 255, 0.5),
+       0 0 1px rgba(0, 255, 255, 0.5);
 }
 
 .totalWinsHead {
-
-    font-size:2vmax;
+    
+    font-size:3vmax;
     color:white;
     letter-spacing: 1px;
 }

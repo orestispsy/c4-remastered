@@ -16,7 +16,8 @@ var block = document.querySelectorAll(".blockScreen");
 var arrow = document.querySelectorAll(".arrow");
 var refresh = document.querySelectorAll(".refresh");
 var gameMode = document.querySelectorAll(".gameMode");
-var totalScoreBox = document.querySelectorAll(".total");
+var winsOuter = document.querySelectorAll(".totalWins");
+var winsBox = document.querySelectorAll(".total");
 var p1Total = document.querySelectorAll(".p1Total");
 var p2Total = document.querySelectorAll(".p2Total");
 var totalWinsHead = document.querySelectorAll(".totalWinsHead");
@@ -240,7 +241,8 @@ const setGameMode = () => {
     gameMode[0].innerHTML = "";
     gameMode[0].style = "width:0; height:0; margin:0";
     arrow[0].style = `    width: 3vmax;
-    height: 3vmax;  margin-bottom:1vmax;   margin-top: -1vmax;`;
+    height: 3vmax;  margin-bottom:1vmax;   margin: -0.5vmax 0 1vmax 0;`;
+      desc[0].style=`margin-top:1vmax`
     desc[0].innerHTML = `
          TO START CLICK OVER THE SLOTS OF THE BOARD, OR DRAG THE DOT ABOVE
             <span>CONNECT 4 SAME DOTS IN THREE WAYS: VERTICALLY,
@@ -275,7 +277,7 @@ const clearBoard = () => {
     clear[0].innerHTML = "Clear Board";
     clear[0].style = `animation:none; border:1px solid white; padding:1vmax; `;
     gameBoard[0].style = `background-color:black; animation:none !important`;
-    desc[0].style = `height:unset; width: 12vw; text-align:center`;
+    desc[0].style = `height:unset; width: 12vw; text-align:center; text-indent:0;`;
     desc[0].innerHTML = `CLEANING THE BOARD`;
 
     setTimeout(() => {
@@ -329,7 +331,8 @@ const victoryHeadlineEffect = (e) => {
 };
 
 const runVictoryEffects = () => {
-    totalScoreBox[0].style = `width:7vw; height:unset; margin-top:1vmax;`;
+    winsOuter[0].style=`margin:1vmax 0`
+    winsBox[0].style = `width:7vw; height:unset;`;
     p1Total[0].style = `width:5vh;height:5vh; `;
     p2Total[0].style = `width:5vh;height:5vh; `;
     if (player === 1) {
@@ -412,11 +415,6 @@ const noWinner = () => {
      controls[0].style = `justify-content:center; visibility:visible; `;
     gameBoard[0].style = `animation: backLight 4s infinite`;
     victoryHeadlineEffect();
-  
-    hand[0].style = `width:0; height:0;`;
-   
-
-
 
      setTimeout(() => {
    
@@ -461,10 +459,10 @@ const gameTimeCount = () => {
     }
     if (minutes >= 1) {
         desc[0].innerHTML = `TIME ELAPSED <div>${minutes} MIN  ${seconds} SEC</div>`;
-        desc[0].style = `height:unset; animation: textDot 1s infinite ease-in-out`;
+        desc[0].style = `height:unset; animation: textDot 1s infinite ease-in-out; text-indent:0 !important`;
     } else {
         desc[0].innerHTML = `TIME ELAPSED <div>${seconds} SEC</div>`;
-        desc[0].style = `height:unset; animation:none !important;`;
+        desc[0].style = `height:unset; animation:none !important; text-indent:0 !important`;
     }
 };
 

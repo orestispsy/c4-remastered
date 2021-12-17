@@ -175,7 +175,7 @@ main {
 }
 
 .controlsTop {
-    min-height: 43vh;
+    min-height: 44vh;
     max-height: 70vh;
     display: flex;
     flex-direction: column;
@@ -218,7 +218,7 @@ main {
 
 .user span {
     letter-spacing: 0;
-
+    margin:0 0.5vmax;
     width: 2vmax;
     height: 2vmax;
 }
@@ -668,6 +668,8 @@ main {
     width: 0;
     height: 0;
     display: flex;
+        align-items: center;
+    justify-content: space-evenly;
 }
 
 .p1Total,
@@ -683,16 +685,16 @@ main {
     font-family: "Black Ops One", cursive;
     color: rgb(163, 255, 42);
     font-size: 1.5vmax;
-    text-shadow: 0 0 1px rgb(204, 0, 255, 0.5), 0 0 1px rgb(204, 0, 255, 0.5),
-        0 0 1px rgb(204, 0, 255, 0.5), 0 0 1px rgb(204, 0, 255, 0.5);
+    text-shadow: 0 0 1px rgba(0, 83, 238), 0 0 1px rgba(0, 83, 238),
+        0 0 1px rgba(0, 83, 238), 0 0 1px rgba(0, 83, 238);
         margin-left:0.5vmax;
+        box-shadow: 0 0 2px rgb(255, 255, 255);
 }
 
 .p2Total {
     background-color: rgb(204, 0, 255);
-
-    text-shadow: 0 0 1px rgba(0, 255, 255, 0.5), 0 0 1px rgba(0, 255, 255, 0.5),
-        0 0 1px rgba(0, 255, 255, 0.5), 0 0 1px rgba(0, 255, 255, 0.5);
+   text-shadow: 0 0 1px rgba(0, 83, 238, 0.726), 0 0 1px rgba(0, 83, 238, 0.726),
+        0 0 1px rgba(0, 83, 238, 0.726), 0 0 1px rgba(0, 83, 238, 0.726);
 }
 
 .totalWinsHead {

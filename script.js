@@ -173,7 +173,7 @@ const setPlayerMove = (e) => {
                             runCPU();
                         }
 
-                        console.log(lastMove);
+                        // console.log(lastMove);
                         player = 2;
                     } else {
                         filteredSlots.reverse()[0].className = "player2";
@@ -189,7 +189,7 @@ const setPlayerMove = (e) => {
 };
 
 const changeTokenColor = (e) => {
-      drawCheck();
+    drawCheck();
     if (!endGame) {
         if (player == 1) {
             token[0].id = `p1`;
@@ -214,16 +214,15 @@ const changeTokenColor = (e) => {
         }
     } else {
         if (player == 1) {
-            user[0].innerHTML = "PLAYER 2 WINS";
+            user[0].innerHTML = `PLAYER <span style='color:rgb(204, 0, 255);'>2</span> WINS`;
         } else if (player == 2) {
-            user[0].innerHTML = "PLAYER 1 WINS";
+            user[0].innerHTML =
+                "PLAYER <span  style='color:cyan'>1</span> WINS";
         } else if (player == 0) {
             user[0].innerHTML = "DRAW";
         }
     }
 };
-
-
 
 const drawCheck = () => {
     let emptySlots = 0;
@@ -241,8 +240,8 @@ const setGameMode = () => {
     gameMode[0].innerHTML = "";
     gameMode[0].style = "width:0; height:0; margin:0";
     arrow[0].style = `    width: 3vmax;
-    height: 3vmax;  margin-bottom:1vmax;   margin: -0.5vmax 0 1vmax 0;`;
-      desc[0].style=`margin-top:1vmax`
+    height: 3vmax;  margin: -0.5vmax 0 1vmax 0;`;
+    desc[0].style = `margin-top:1vmax`;
     desc[0].innerHTML = `
          TO START CLICK OVER THE SLOTS OF THE BOARD, OR DRAG THE DOT ABOVE
             <span>CONNECT 4 SAME DOTS IN THREE WAYS: VERTICALLY,
@@ -253,11 +252,11 @@ const setGameMode = () => {
 };
 
 const clearBoard = () => {
-    if(endGame){
-             setTimeout(() => {
-                  gameTimeCount();
-             }, 1500);
-
+    if (endGame) {
+        hand[0].style = `    background-image: url("./assets/hand.png"); width: 12vw; height: 11vh;`;
+        setTimeout(() => {
+            gameTimeCount();
+        }, 1500);
     }
     endGame = false;
     goButton = false;
@@ -273,17 +272,19 @@ const clearBoard = () => {
     audio[0].currentTime = 0;
     seconds = 0;
     minutes = 0;
-    hand[0].style = `    background-image: url("./assets/hand.png"); width: 12vw; height: 11vh;`;
+    p1Total[0].style = `width:5vh;height:5vh; animation: none`;
+    p2Total[0].style = `width:5vh;height:5vh; animation: none`;
+
     clear[0].innerHTML = "Clear Board";
     clear[0].style = `animation:none; border:1px solid white; padding:1vmax; `;
     gameBoard[0].style = `background-color:black; animation:none !important`;
     desc[0].style = `height:unset; width: 12vw; text-align:center; text-indent:0;`;
     desc[0].innerHTML = `CLEANING THE BOARD`;
-
+    block[0].style = `width:100vw; height:100vh`;
     setTimeout(() => {
         player = 1;
         changeTokenColor();
-      
+        block[0].style = `width:0; height:0`;
     }, 1500);
 };
 
@@ -331,22 +332,27 @@ const victoryHeadlineEffect = (e) => {
 };
 
 const runVictoryEffects = () => {
-    winsOuter[0].style=`margin:1vmax 0`
-    winsBox[0].style = `width:7vw; height:unset;`;
-    p1Total[0].style = `width:5vh;height:5vh; `;
-    p2Total[0].style = `width:5vh;height:5vh; `;
+    winsOuter[0].style = `margin:1vmax 0`;
+    winsBox[0].style = `width:12vw; height:unset; margin:0.5vmax;`;
+    p1Total[0].style = `width:5vh;height:5vh; animation: drawFX 1s`;
+    p2Total[0].style = `width:5vh;height:5vh; animation: drawFX 1.5s`;
     if (player === 1) {
         player1Total++;
         p1Total[0].innerHTML = `${player1Total}`;
         p2Total[0].innerHTML = `${player2Total}`;
         totalWinsHead[0].innerHTML = "SCORE";
-       
+        setTimeout(() => {
+            p1Total[0].style = `width:5vh;height:5vh; animation: backlight 4s infinite ease-in-out`;
+        }, 2500);
     } else if (player === 2) {
         player2Total++;
         p1Total[0].innerHTML = `${player1Total}`;
         p2Total[0].innerHTML = `${player2Total}`;
         totalWinsHead[0].innerHTML = "SCORE";
-
+        totalWinsHead[0].innerHTML = "SCORE";
+        setTimeout(() => {
+            p2Total[0].style = `width:5vh;height:5vh; animation: backlight 3s infinite ease-in-out`;
+        }, 2500);
     }
     endGame = true;
     audio[0].volume = 0.5;
@@ -373,10 +379,12 @@ const runVictoryEffects = () => {
         gameBoard[0].style = `animation: backLight 0.5s infinite alternate`;
         token[0].style = `animation:shake 4s infinite ease-in-out !important, backlight2 2.5s infinite ease-in-out; !important`;
     } else {
-      let color
-      if (player==1){
-          color="cyan"
-      }else{color=`rgb(204, 0, 255)`}
+        let color;
+        if (player == 1) {
+            color = "cyan";
+        } else {
+            color = `rgb(204, 0, 255)`;
+        }
         setTimeout(() => {
             if (endGame) {
                 token[0].style = ` box-shadow:0 0 20px ${color}; margin-top:-4vmax; backlight2 2.5s infinite ease-in-out;`;
@@ -410,18 +418,17 @@ const runVictoryEffects = () => {
 };
 
 const noWinner = () => {
-    player=0
-    endGame=true
-     controls[0].style = `justify-content:center; visibility:visible; `;
+    player = 0;
+    endGame = true;
+    controls[0].style = `justify-content:center; visibility:visible; `;
     gameBoard[0].style = `animation: backLight 4s infinite`;
     victoryHeadlineEffect();
 
-     setTimeout(() => {
-   
-           user[0].innerHTML="DRAW"
-            user[0].style = "font-size:2.5vmax;";
-          token[0].id = "draw";
-     }, 200);
+    setTimeout(() => {
+        user[0].innerHTML = "DRAW";
+        user[0].style = "font-size:2.5vmax;";
+        token[0].id = "draw";
+    }, 200);
     myAudioDraw.play();
 };
 
@@ -491,7 +498,7 @@ document.addEventListener("click", function (e) {
     if (e.target.className === "modeOption1vCPU") {
         setGameMode();
         gameVersusCPU = true;
-         user[0].innerHTML = `GAMES RULES`;
+        user[0].innerHTML = `GAMES RULES`;
     }
 
     if (e.target.className === "refresh") {
@@ -596,10 +603,7 @@ document.addEventListener("touchstart", function (e) {
 ///////////////////////////////////////// Start CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
 document.addEventListener("touchend", function (e) {
     if (firstClick && goButton) {
-        console.log(allDots[6].offsetTop, allDots[6].offsetLeft);
         for (let ii = allDots.length - 1; ii >= 0; ii--) {
-            console.log(ii);
-
             if (
                 allDots[ii].offsetLeft + 2 * e.target.clientWidth + 30 >
                     e.target.offsetLeft + e.target.clientWidth + 30 &&
@@ -610,7 +614,6 @@ document.addEventListener("touchend", function (e) {
             ) {
                 setPlayerMove(Number(allDots[ii].id));
             }
-
             setTimeout(() => {
                 changeTokenColor();
                 goButton = false;
@@ -624,137 +627,138 @@ document.addEventListener("touchend", function (e) {
     }
 });
 ///////////////////////////////////////// End CHECK EMPTY SLOTS & PLAY  ////////////////////////////////
+
 ///////////////////// RESPONSIVE DRAG FX/////////////////////
 
 ///////////////////////////////////////// End THROW / DRAG TOKEN EFFECTS ////////////////////////////////
 
 const victoryCheck = () => {
-  
     if (!endGame) {
+        for (let i = allDots.length - 1; i >= 0; i--) {
+            //////////////////////////// START CHECKING FOR VERTICAL VICTORIES///////////////////////////////////////
 
-    for (let i = allDots.length - 1; i >= 0; i--) {
-        //////////////////////////// START CHECKING FOR VERTICAL VICTORIES///////////////////////////////////////
-
-        if (allDots[i].className == `player${player}`) {
-            if (i - 7 < 0 || i - 14 < 0 || i - 21 < 0) {
-                return;
-            }
-            if (
-                allDots[i].className == `player${player}` &&
-                allDots[i - 7].className == `player${player}` &&
-                allDots[i - 14].className == `player${player}` &&
-                allDots[i - 21].className == `player${player}`
-            ) {
-                if (
-                    allDots[i - 7].className &&
-                    allDots[i - 14].className &&
-                    allDots[i - 21].className
-                ) {
+            if (allDots[i].className == `player${player}`) {
+                if (i - 7 < 0 || i - 14 < 0 || i - 21 < 0) {
+                    return;
                 }
-                allDots[i].className = `winner`;
-                allDots[i - 7].className = `winner`;
-                allDots[i - 14].className = `winner`;
-                allDots[i - 21].className = `winner`;
-                runVictoryEffects();
-            }
-            ///////////////////////////// END CHECKING FOR VERTICAL VICTORIES///////////////////////////////////////////
-
-            ///////////////////////////// START CHECKING FOR HORIZONTAL VICTORIES//////////////////////////////////////
-
-            for (let ii = 3; ii <= allDots.length - 1; ii++) {
                 if (
-                    allDots[ii].className == `player${player}` &&
-                    allDots[ii - 1].className == `player${player}` &&
-                    allDots[ii - 2].className == `player${player}` &&
-                    allDots[ii - 3].className == `player${player}`
+                    allDots[i].className == `player${player}` &&
+                    allDots[i - 7].className == `player${player}` &&
+                    allDots[i - 14].className == `player${player}` &&
+                    allDots[i - 21].className == `player${player}`
                 ) {
                     if (
-                        ///////////////////// BLOCK SIDE COUNT /////////////////////
-                        (ii >= 3 && ii <= 6) ||
-                        (ii >= 10 && ii <= 13) ||
-                        (ii >= 17 && ii <= 20) ||
-                        (ii >= 24 && ii <= 27) ||
-                        (ii >= 31 && ii <= 34) ||
-                        (ii >= 38 && ii <= 41)
-                        ///////////////////// BLOCK SIDE COUNT /////////////////////
+                        allDots[i - 7].className &&
+                        allDots[i - 14].className &&
+                        allDots[i - 21].className
                     ) {
-                        allDots[ii].className = `winner`;
-                        allDots[ii - 1].className = `winner`;
-                        allDots[ii - 2].className = `winner`;
-                        allDots[ii - 3].className = `winner`;
-                        runVictoryEffects();
                     }
+                    allDots[i].className = `winner`;
+                    allDots[i - 7].className = `winner`;
+                    allDots[i - 14].className = `winner`;
+                    allDots[i - 21].className = `winner`;
+                    runVictoryEffects();
                 }
-            }
+                ///////////////////////////// END CHECKING FOR VERTICAL VICTORIES///////////////////////////////////////////
 
-            ///////////////////////////////// END CHECKING FOR HORIZONTAL VICTORIES//////////////////////////////////
+                ///////////////////////////// START CHECKING FOR HORIZONTAL VICTORIES//////////////////////////////////////
 
-            ///////////////////////////////// START CHECKING FOR DIAGONAL VICTORIES/////////////////////////////////
-            for (let x = allDots.length - 1; x >= 24; x--) {
-                if (
-                    allDots[x].className == `player${player}` &&
-                    allDots[x - 7].className == `player${player}` &&
-                    allDots[x - 14].className == `player${player}`
-                ) {
-                    console.log("WARNING", x - 14);
-                    warning4Victory = Number(allDots[x - 14].id);
-                    lastMoveHelper = Number(allDots[x - 21].id);
-                }
-                if (
-                    allDots[x].className == `player${player}` &&
-                    allDots[x - 8].className == `player${player}` &&
-                    allDots[x - 16].className == `player${player}` &&
-                    allDots[x - 24].className == `player${player}`
-                ) {
+                for (let ii = 3; ii <= allDots.length - 1; ii++) {
                     if (
-                        ///////////////////// BLOCK SIDE COUNT /////////////////////
-                        (x >= 38 && x <= 41) ||
-                        (x >= 31 && x <= 34) ||
-                        (x >= 24 && x <= 27)
-                        ///////////////////// BLOCK SIDE COUNT /////////////////////
+                        allDots[ii].className == `player${player}` &&
+                        allDots[ii - 1].className == `player${player}` &&
+                        allDots[ii - 2].className == `player${player}` &&
+                        allDots[ii - 3].className == `player${player}`
                     ) {
-                        allDots[x].className = `winner`;
-                        allDots[x - 8].className = `winner`;
-                        allDots[x - 16].className = `winner`;
-                        allDots[x - 24].className = `winner`;
-                        runVictoryEffects();
+                        if (
+                            ///////////////////// BLOCK SIDE COUNT /////////////////////
+                            (ii >= 3 && ii <= 6) ||
+                            (ii >= 10 && ii <= 13) ||
+                            (ii >= 17 && ii <= 20) ||
+                            (ii >= 24 && ii <= 27) ||
+                            (ii >= 31 && ii <= 34) ||
+                            (ii >= 38 && ii <= 41)
+                            ///////////////////// BLOCK SIDE COUNT /////////////////////
+                        ) {
+                            allDots[ii].className = `winner`;
+                            allDots[ii - 1].className = `winner`;
+                            allDots[ii - 2].className = `winner`;
+                            allDots[ii - 3].className = `winner`;
+                            runVictoryEffects();
+                        }
                     }
                 }
-            }
-            for (let x = allDots.length - 1; x >= 21; x--) {
-                if (
-                    allDots[x].className == `player${player}` &&
-                    allDots[x - 1].className == `player${player}` &&
-                    allDots[x - 2].className == `player${player}`
-                ) {
-                    console.log("WARNING", x - 2);
-                    warning4Victory = Number(allDots[x - 2].id);
-                    lastMoveHelper = Number(allDots[x - 3].id);
-                }
-                if (
-                    allDots[x].className == `player${player}` &&
-                    allDots[x - 6].className == `player${player}` &&
-                    allDots[x - 12].className == `player${player}` &&
-                    allDots[x - 18].className == `player${player}`
-                ) {
+
+                ///////////////////////////////// END CHECKING FOR HORIZONTAL VICTORIES//////////////////////////////////
+
+                ///////////////////////////////// START CHECKING FOR DIAGONAL VICTORIES/////////////////////////////////
+
+                for (let x = allDots.length - 1; x >= 24; x--) {
                     if (
-                        ///////////////////// START BLOCK SIDE COUNT /////////////////////
-                        (x >= 35 && x <= 38) ||
-                        (x >= 28 && x <= 31) ||
-                        (x >= 21 && x <= 24)
-                        ///////////////////// END BLOCK SIDE COUNT /////////////////////
+                        allDots[x].className == `player${player}` &&
+                        allDots[x - 7].className == `player${player}` &&
+                        allDots[x - 14].className == `player${player}`
                     ) {
-                        allDots[x].className = `winner`;
-                        allDots[x - 6].className = `winner`;
-                        allDots[x - 12].className = `winner`;
-                        allDots[x - 18].className = `winner`;
-                        runVictoryEffects();
+                        // console.log("WARNING", x - 14);
+                        warning4Victory = Number(allDots[x - 14].id);
+                        lastMoveHelper = Number(allDots[x - 21].id);
+                    }
+                    if (
+                        allDots[x].className == `player${player}` &&
+                        allDots[x - 8].className == `player${player}` &&
+                        allDots[x - 16].className == `player${player}` &&
+                        allDots[x - 24].className == `player${player}`
+                    ) {
+                        if (
+                            ///////////////////// BLOCK SIDE COUNT /////////////////////
+                            (x >= 38 && x <= 41) ||
+                            (x >= 31 && x <= 34) ||
+                            (x >= 24 && x <= 27)
+                            ///////////////////// BLOCK SIDE COUNT /////////////////////
+                        ) {
+                            allDots[x].className = `winner`;
+                            allDots[x - 8].className = `winner`;
+                            allDots[x - 16].className = `winner`;
+                            allDots[x - 24].className = `winner`;
+                            runVictoryEffects();
+                        }
                     }
                 }
+                for (let x = allDots.length - 1; x >= 21; x--) {
+                    if (
+                        allDots[x].className == `player${player}` &&
+                        allDots[x - 1].className == `player${player}` &&
+                        allDots[x - 2].className == `player${player}`
+                    ) {
+                        // console.log("WARNING", x - 2);
+                        warning4Victory = Number(allDots[x - 2].id);
+                        lastMoveHelper = Number(allDots[x - 3].id);
+                    }
+                    if (
+                        allDots[x].className == `player${player}` &&
+                        allDots[x - 6].className == `player${player}` &&
+                        allDots[x - 12].className == `player${player}` &&
+                        allDots[x - 18].className == `player${player}`
+                    ) {
+                        if (
+                            ///////////////////// START BLOCK SIDE COUNT /////////////////////
+                            (x >= 35 && x <= 38) ||
+                            (x >= 28 && x <= 31) ||
+                            (x >= 21 && x <= 24)
+                            ///////////////////// END BLOCK SIDE COUNT /////////////////////
+                        ) {
+                            allDots[x].className = `winner`;
+                            allDots[x - 6].className = `winner`;
+                            allDots[x - 12].className = `winner`;
+                            allDots[x - 18].className = `winner`;
+                            runVictoryEffects();
+                        }
+                    }
+                }
+                //////////////////////////////// END CHECKING FOR DIAGONAL VICTORIES/////////////////////////////////////
             }
-            //////////////////////////////// END CHECKING FOR DIAGONAL VICTORIES/////////////////////////////////////
         }
-    }}
+    }
 };
 
 const runCPU = () => {
@@ -771,7 +775,7 @@ const runCPU = () => {
         }
 
         let helper = [];
-        console.log(lastMove);
+        // console.log(lastMove);
 
         if (lastMove - 3 < 0) {
             allDots.forEach((dot) => {
@@ -789,10 +793,10 @@ const runCPU = () => {
                     helper.push(dot);
                 }
             });
-            console.log("warn", warning4Victory, "lst", lastMove);
+            // console.log("warn", warning4Victory, "lst", lastMove);
             if (warning4Victory === lastMove) {
                 if (warning4Victory + 2 === lastMove + 2) {
-                    console.log("HELPER", lastMoveHelper);
+                    // console.log("HELPER", lastMoveHelper);
                     if (
                         allDots[lastMoveHelper + 6] &&
                         allDots[lastMoveHelper + 6].className === "dot"
@@ -842,7 +846,7 @@ const runCPU = () => {
                     helper.push(dot);
                 }
             });
-            console.log("helper", helper);
+            // console.log("helper", helper);
             helper[helper.length - 1].className === "dot";
         }
         if (letMusicPlay) {
